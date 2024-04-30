@@ -7,14 +7,20 @@
   "license": "MIT",
   "version": "1.0.0",
   "scripts": {
-    "dev": "next -p 10000",
+    "dev": "next -p 50000",
     "build": "next build",
-    "start": "PORT=10000 next start",
+    "start": "PORT=50000 next start",
     "lint": "next lint"
   },
   "dependencies": {
+    "@ceramicnetwork/cli": "^5.7.0",
+    "@composedb/cli": "^0.7.1",
+    "@composedb/client": "^0.7.1",
+    "@composedb/devtools": "^0.7.1",
+    "@composedb/devtools-node": "^0.7.1",
     "d3": "^7.8.5",
     "d3-hexbin": "^0.2.2",
+    "dotenv": "^16.4.5",
     "js-cookie": "^3.0.5",
     "next": "14.1.4",
     "react": "^18.2.0",
@@ -22,6 +28,7 @@
     "sass": "1.69.5"
   },
   "devDependencies": {
+    "@composedb/types": "^0.7.1",
     "@types/d3-hexbin": "^0.2.5",
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.59",

@@ -1,0 +1,199 @@
+type StorageProviderAuditReportDocument @createModel(
+  accountRelation: LIST
+  description: "A detailed audit report document for storage providers."
+) @createIndex(fields: [{ path: ["type"] }]) {
+  type: String! @string(minLength: 1, maxLength: 100)
+  greenscore: Greenscore!
+  audit_document: AuditDocument
+}
+
+type Greenscore {
+  date: String! @string(minLength: 1, maxLength: 100)
+  greenscoreDetails: GreenscoreDetails!
+}
+
+type GreenscoreDetails {
+  type: String! @string(minLength: 1, maxLength: 100)
+  status: String! @string(minLength: 1, maxLength: 100)
+  document_id: ID!
+  green_score: Float!
+  normalized_el: Int!
+  location_score: Float!
+  provider_email: String! @string(minLength: 1, maxLength: 100)
+  emissions_score: Float!
+  report_end_date: String! @string(minLength: 1, maxLength: 100)
+  confidence_score: Float!
+  provider_location: String! @string(minLength: 1, maxLength: 100)
+  report_start_date: String! @string(minLength: 1, maxLength: 100)
+  provider_full_name: String! @string(minLength: 1, maxLength: 100)
+  network_marginal_emissions: NetworkMarginalEmissions!
+  benchmark_emission_intensity: Float!
+  marginal_emissions_intensity: Float!
+  scope2_emissions_calculation: Scope2EmissionsCalculation!
+  emission_intensity_calculation: EmissionIntensityCalculation!
+  network_scope2_emissions_calculation: NetworkScope2EmissionsCalculation!
+  benchmark_marginal_emission_intensity: Float!
+  normalized_marginal_emission_intensity: Float!
+}
+
+type NetworkMarginalEmissions {
+  network_marginal_emissions: Float!
+  total_network_electricity_consumption: String! @string(minLength: 1, maxLength: 100)
+  total_network_renewable_energy_production: Int!
+  global_average_grid_emissions_factor_value: Int!
+}
+
+type Scope2EmissionsCalculation {
+  scope2_emissions: Int!
+  grid_emissions_factor_value: Float!
+  actual_net_power_consumed_value: Int!
+  renewable_energy_consumption_value: Int!
+  average_data_storage_capacity_value: Float!
+}
+
+type EmissionIntensityCalculation {
+  scope2_emissions: Int!
+  emission_intensity: Float!
+}
+
+type NetworkScope2EmissionsCalculation {
+  network_scope2_emissions: Int!
+  network_average_renewable_energy_value: Int!
+  estimate_cumulative_energy_use_per_time: String! @string(minLength: 1, maxLength: 100)
+  global_average_grid_emissions_factor_value: Int!
+  average_raw_byte_capacity_for_reporting_time_value: Float!
+}
+
+type AuditDocument {
+  type: String! @string(minLength: 1, maxLength: 100)
+  created_at: String! @string(minLength: 1, maxLength: 100)
+  evp_report: EVPReport!
+}
+
+type EVPReport {
+  type: String! @string(minLength: 1, maxLength: 100)
+  user_id: ID!
+  created_at: String! @string(minLength: 1, maxLength: 100)
+  updated_at: String! @string(minLength: 1, maxLength: 100)
+  audit_review: AuditReview!
+  audit_status: String! @string(minLength: 1, maxLength: 100)
+  submitted_at: String! @string(minLength: 1, maxLength: 100) 
+  energy_production: EnergyProduction!
+  water_consumption: WaterConsumption!
+  location_information: LocationInformation!
+  hardware_configuration: HardwareConfiguration!
+  electricity_consumption: ElectricityConsumption!
+  renewable_energy_procurement: RenewableEnergyProcurement!
+  preliminary_results_rec_matching: PreliminaryResultsRecMatching!
+}
+
+type AuditReview {
+  auditor: String! @string(minLength: 1, maxLength: 100)
+  greenscore:  [Greenscore]! @list(maxLength: 100) # Add @list directive here
+  audit_outputs: [AuditOutput]! @list(maxLength: 100) # Add @list directive here
+  report_option: String! @string(minLength: 1, maxLength: 100)
+  review_status: String! @string(minLength: 1, maxLength: 100)
+  provider_evp_status: String! @string(minLength: 1, maxLength: 100)
+  provider_evp_submission_date: String! @string(minLength: 1, maxLength: 100)
+}
+
+type AuditOutput {
+  date: String! @string(minLength: 1, maxLength: 100)
+  audit_outputs: AuditOutputDetails!
+}
+
+type AuditOutputDetails {
+  status: String! @string(minLength: 1, maxLength: 100)
+  feedback: String! @string(minLength: 1, maxLength: 500)
+  review_status: String! @string(minLength: 1, maxLength: 100)
+  recommendation_file: String! @string(minLength: 1, maxLength: 100)
+  scoring_metric_file: String! @string(minLength: 1, maxLength: 100)
+}
+
+type EnergyProduction {
+  status: String! @string(minLength: 1, maxLength: 100)
+  inspection_date: String! @string(minLength: 1, maxLength: 100)
+  solar_watt_peak: Int!
+  purchase_receipt: String! @string(minLength: 1, maxLength: 100)
+  installation_date: String! @string(minLength: 1, maxLength: 100)
+  solar_panel_brand: String! @string(minLength: 1, maxLength: 100)
+  inspection_document: String! @string(minLength: 1, maxLength: 100)
+  method_of_measurement: String! @string(minLength: 1, maxLength: 100)
+  number_of_solar_panels: Int!
+  frequency_of_measurement: String! @string(minLength: 1, maxLength: 100)
+  solar_panel_modal_number: String! @string(minLength: 1, maxLength: 100)
+  filecoin_renewable_energy_usage: Boolean!
+}
+
+type WaterConsumption {
+  status: String! @string(minLength: 1, maxLength: 100)
+  end_date: String! @string(minLength: 1, maxLength: 100)
+  reference: String! @string(minLength: 1, maxLength: 100)
+  start_date: String! @string(minLength: 1, maxLength: 100)
+  water_company: String! @string(minLength: 1, maxLength: 100)
+  water_bill_files: [String!]! @list(maxLength: 100) @string(minLength: 1, maxLength: 100)
+  filecoin_water_usage: Boolean!
+}
+
+type LocationInformation {
+  status: String! @string(minLength: 1, maxLength: 100)
+  provider_city: String! @string(minLength: 1, maxLength: 100)
+  provider_state: String! @string(minLength: 1, maxLength: 100)
+  provider_country: String! @string(minLength: 1, maxLength: 100)
+  provider_zipcode: String! @string(minLength: 1, maxLength: 100)
+  address_confirmed: Boolean!
+  provider_location: String! @string(minLength: 1, maxLength: 100)
+}
+
+type HardwareConfiguration {
+  status: String! @string(minLength: 1, maxLength: 100)
+  hardware: [HardwareDetail!]! @list(maxLength: 100) #
+  provider_city: String! @string(minLength: 1, maxLength: 100)
+  provider_state: String! @string(minLength: 1, maxLength: 100)
+  provider_country: String! @string(minLength: 1, maxLength: 100)
+  address_confirmed: Boolean!
+  provider_location: String! @string(minLength: 1, maxLength: 100)
+}
+
+type HardwareDetail {
+  description: String! @string(minLength: 1, maxLength: 100)
+  hardware_type: String! @string(minLength: 1, maxLength: 100)
+  supporting_file: String! @string(minLength: 1, maxLength: 100)
+  hardware_details: String! @string(minLength: 1, maxLength: 500)
+}
+
+type ElectricityConsumption {
+  status: String! @string(minLength: 1, maxLength: 100)
+  end_date: String! @string(minLength: 1, maxLength: 100)
+  reference: String! @string(minLength: 1, maxLength: 100)
+  start_date: String! @string(minLength: 1, maxLength: 100)
+  electricity_company: String! @string(minLength: 1, maxLength: 100)
+  electricity_bill_file: [String!]! @list(maxLength: 100) @string(minLength: 1, maxLength: 100)
+  estimation_methodology: String! @string(minLength: 1, maxLength: 100)
+  annual_electricity_usage: Float!
+  actual_electricity_consumed: Float!
+  actual_electricity_returned: Float!
+  actual_electricity_delivered: Float!
+  electricity_not_powering_filecoin: Boolean!
+}
+
+type RenewableEnergyProcurement {
+  status: String! @string(minLength: 1, maxLength: 100)
+  end_date: String @string(minLength: 1, maxLength: 100)
+  start_date: String @string(minLength: 1, maxLength: 100)
+  supporting_file: String @string(minLength: 1, maxLength: 100)
+  filecoin_energy_usage: Boolean!
+  renewable_energy_type: String @string(minLength: 1, maxLength: 100)
+  supporting_certificates: [String!]! @list(maxLength: 100) @string(minLength: 1, maxLength: 100)
+  actual_electricity_returned: Float!
+  actual_electricity_delivered: Float!
+  renewable_energy_purchased_from: String @string(minLength: 1, maxLength: 100)
+}
+
+type PreliminaryResultsRecMatching {
+  status: String! @string(minLength: 1, maxLength: 100)
+  supporting_file: String 
+  actual_electricity_consumed: Float!
+  actual_electricity_returned: Float!
+  actual_electricity_delivered: Float!
+}
