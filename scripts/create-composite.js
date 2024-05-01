@@ -11,13 +11,15 @@ async function loadModules() {
   return { CeramicClient, DID, Ed25519Provider, getResolver, fromString, createComposite, writeEncodedComposite };
 }
 
-async function runCeramicOperations() {
+async function runCreateComposite() {
   const {
       CeramicClient, DID, Ed25519Provider, getResolver, fromString,
       createComposite, writeEncodedComposite
   } = await loadModules();
 
-  const privateKeyHex = process.env.PRIVATE_KEY;  // Ensure to replace with actual private key
+  // Hexadecimal-encoded private key for a DID having admin access to the target Ceramic node
+  // Replace the example key here by your admin private key
+  const privateKeyHex = fromString('b0cb[...]515f', 'base16');
   const privateKey = fromString(privateKeyHex, 'base16');
 
   const did = new DID({
@@ -28,10 +30,17 @@ async function runCeramicOperations() {
   try {
       await did.authenticate();
 
+      // Replace by the URL of the Ceramic node you want to deploy the Models to
       const ceramic = new CeramicClient('http://localhost:7007');
-      ceramic.did = did;  // An authenticated DID must be set on the Ceramic instance
 
+      // An authenticated DID must be set on the Ceramic instance
+      ceramic.did = did;  
+
+
+      // Replace by the path to the source schema file
       const composite = await createComposite(ceramic, './composites/evp-template.graphql');
+
+      // Replace by the path to the encoded composite file
       await writeEncodedComposite(composite, './composites/evp-template-composite.json');
 
       console.log('Composite created and written successfully.');
@@ -40,4 +49,4 @@ async function runCeramicOperations() {
   }
 }
 
-runCeramicOperations();
+runCreateComposite();

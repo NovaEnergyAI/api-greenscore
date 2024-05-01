@@ -192,7 +192,7 @@ type RenewableEnergyProcurement {
 
 type PreliminaryResultsRecMatching {
   status: String! @string(minLength: 1, maxLength: 100)
-  supporting_file: String 
+  supporting_file: String @string(minLength: 1, maxLength: 100)
   actual_electricity_consumed: Float!
   actual_electricity_returned: Float!
   actual_electricity_delivered: Float!
