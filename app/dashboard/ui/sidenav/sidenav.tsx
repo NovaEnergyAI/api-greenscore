@@ -5,6 +5,7 @@ import NavLinks from './navlinks';
 import NovaLogo from './novalogo';
 import { PowerIcon } from '@heroicons/react/24/outline';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 export default function SideNav() {
   const router = useRouter(); 
@@ -17,7 +18,12 @@ export default function SideNav() {
     <div className="side-nav">
       <Link href="/">
         <div className="side-nav__logo-container">
-          <NovaLogo />
+        <Image
+        src="/NovaLogo.png"
+        width={250}
+        height={70}
+        alt='Nova Energy Logo'
+      />          
         </div>
       </Link>
       <div className="side-nav__content">
