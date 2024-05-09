@@ -1,8 +1,6 @@
 import '@root/global.scss';
 
-import Bluesky from '@system/svg/social/Bluesky';
 import DefaultLayout from '@components/DefaultLayout';
-import ListItem from '@components/ListItem';
 import Package from '@root/package.json';
 import Content from '@system/layouts/Content';
 import SectionFullHeight from '@system/sections/SectionFullHeight';
@@ -66,7 +64,15 @@ export default async function Page(props) {
           <Lead style={{ marginTop: `var(--type-scale-5)` }}>
             An example using ComposeDB & attestion services.
           </Lead>
-          <Button/>
+          <Button  
+              href="/dashboard"
+              style={{
+                marginTop: 'var(--type-scale-2)',
+                backgroundColor: '#000000',
+                color: '#ffffff',
+              }}>
+              dashboard
+            </Button>
         </Content>
       </SectionFullHeight>
       </div>
