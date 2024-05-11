@@ -1,5 +1,5 @@
 import '@root/global.scss';
-import { inter } from '../app/dashboard/ui/fonts'
+import { inter } from '../components/ui/fonts'
 
 export default function RootLayout({
   children,
