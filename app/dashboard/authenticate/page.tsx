@@ -3,7 +3,6 @@
 import '@root/global.scss';
 
 import React, { useEffect } from 'react';
-
 import { FormHeading } from '@root/components/ui/typography/forms';
 import { ThirdwebSDKProvider } from '@thirdweb-dev/react';
 import { useRouter } from 'next/router';
@@ -13,16 +12,15 @@ import SuccessScreen from '@root/components/ui/success/SuccessScreen';
 
 
 export default function AuthenticateProvider(props){
-
     const { user } = useUser();
     const router = useRouter(); 
 
-    // Automatically navigate to the "Add Asset" page after a successful sign-in:
+    // Automatically navigateS to the "Add Asset" page after a successful sign-in:
     useEffect(() => {
         if(user){
             const timer = setTimeout(() => {
                 router.push('/dashboard/add-asset');
-            }, 3000); // Delay nav for 3 seconds
+            }, 3000);
             return () => clearTimeout(timer);
         }
     }, [user, router]);
@@ -30,7 +28,7 @@ export default function AuthenticateProvider(props){
     return (
         <div>
             {user ? (
-                <SuccessScreen message="You have successfully signed in!" />
+                <SuccessScreen message="You've successfully signed in!" />
             ) : (
                 <>
                 <FormHeading>Sign In</FormHeading>
