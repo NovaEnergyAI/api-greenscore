@@ -17,7 +17,6 @@ import {
 
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { useSignature } from '@components/context/SignatureContext';
 import { useAddress } from '@components/context/AddressContext';
 import { useUser } from '@components/context/UserContext';
 
@@ -88,8 +87,8 @@ export default function SignInWithWeb3() {
         const signature = await signer.signMessage(message);
         setAddress(address);
         console.log('Login obtained successfully');
-        const result = await onAuthenticate({ address: address, message: message, signature: signature });
-        setUser(result.user);
+        // const result = await onAuthenticate({ address: address, message: message, signature: signature });
+        setUser({ address: address, message: message, signature: signature });
       } catch (error) {
         console.error('Error signing in with Web3', error);
       }
@@ -117,12 +116,12 @@ export default function SignInWithWeb3() {
       ]}
     >
       {wallet && !status && (
-        <Button style={ButtonStyleEnum.BLACK} withArrow={false} className={styles.fullWidthButton} onClick={signLoginMessage}>
-          Authenticate via. Web3
+        <Button style={ButtonStyleEnum.BORDER_BLACK} withArrow={false} className={styles.fullWidthButton} onClick={signLoginMessage}>
+          Authenticated via. Web3
         </Button>
       )}
       {status && (
-        <Button style={ButtonStyleEnum.BLACK} withArrow={false} className={styles.fullWidthButton}>
+        <Button style={ButtonStyleEnum.BORDER_BLACK} withArrow={false} className={styles.fullWidthButton}>
           {status}
         </Button>
       )}
@@ -131,7 +130,7 @@ export default function SignInWithWeb3() {
           theme={'dark'}
           modalSize={'wide'}
           style={{ width: '100%', alignItems: 'center', justifyContent: 'center', marginTop: '1rem', marginBottom: '1rem' }}
-          showThirdwebBranding={false}
+          showThirdwebBranding={true}
           onConnect={() => window.location.reload()}
         />
       )}

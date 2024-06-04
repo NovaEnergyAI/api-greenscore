@@ -1,4 +1,4 @@
-import styles from '@components/typography/Typography.module.scss';
+import styles from './Typography.module.scss';
 
 export function H1(props) {
   return <h1 className={styles.h1} {...props} />;

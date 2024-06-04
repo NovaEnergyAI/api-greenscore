@@ -2,7 +2,7 @@ import { classNames } from '@root/common/utilities';
 
 import buttonStyles from './Button.module.scss';
 
-import ArrowRightSVG from '../../svgs/ArrowRightSVG';
+import ArrowRightSVG from '../svgs/ArrowRightSVG';
 import Loader from '@components/ui/loader/Loader';
 import React from 'react';
 

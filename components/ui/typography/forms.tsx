@@ -1,4 +1,4 @@
-import styles from '@components/typography/Typography.module.scss';
+import styles from './Typography.module.scss';
 import { P } from '.';
 
 export function FormHeading(props) {

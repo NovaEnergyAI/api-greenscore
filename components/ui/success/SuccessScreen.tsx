@@ -1,6 +1,6 @@
 'use client';
 
-import styles from '@components/SuccessScreen.module.scss';
+import styles from './SuccessScreen.module.scss';
 
 import React from 'react';
 import LottieAnimation from '../LottieAnimation';
