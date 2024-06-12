@@ -3,7 +3,7 @@ import { CeramicClient } from "@ceramicnetwork/http-client";
 import { ComposeClient } from "@composedb/client";
 
 // Import compiled composite:
-import { definition } from "../../composites/runtime-composite.js";
+import { definition } from "../composites/runtime-composite.js";
 import { RuntimeCompositeDefinition } from "@composedb/types";
 
 /**

@@ -17,8 +17,8 @@ import {
 
 import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
-import { useAddress } from '@components/context/AddressContext';
-import { useUser } from '@components/context/UserContext';
+import { useAddress } from '../../../context/AddressContext';
+import { useUser } from '../../../context/UserContext';
 
 import Button, { ButtonStyleEnum } from '@components/ui/button/Button';
 

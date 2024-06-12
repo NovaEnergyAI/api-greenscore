@@ -6,10 +6,10 @@ import React, { useEffect, useState } from 'react';
 import { FormHeading } from '@root/components/ui/typography/forms';
 import { ThirdwebSDKProvider } from '@thirdweb-dev/react';
 import { useRouter } from 'next/router';
-import { useUser } from '@root/components/context/UserContext';
+import { useUser } from '@root/context/UserContext';
 import SignInWithWeb3 from '@root/components/ui/signin/SignInWithWeb3';
 import SuccessScreen from '@root/components/ui/success/SuccessScreen';
-import { useCeramicContext } from '@root/components/context/CeramicContext';
+import { useCeramicContext } from '@root/context/CeramicContext';
 import { authenticateCeramic } from '@root/scripts/authenticate';
 import AuthPrompt from "./did-select-popup"
 
