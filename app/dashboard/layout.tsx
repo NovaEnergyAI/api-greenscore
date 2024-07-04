@@ -1,3 +1,4 @@
+// app/dashboard/layout.tsx
 import SideNav from '../../components/ui/sidenav/sidenav';
 
 export default function Layout({ children }: { children: React.ReactNode }) {

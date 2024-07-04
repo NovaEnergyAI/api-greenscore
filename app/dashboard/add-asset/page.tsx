@@ -1,72 +1,79 @@
-'use client'
+// app/dashboard/add-asset/page.tsx
+'use client';
 
 import React, { useState } from 'react';
+// import { useCeramicContext } from '@root/context/CeramicContext';
 
-export default function Page() {
-    const [jsonInput, setJsonInput] = useState('');
+export default function AddAssetPage() {
+  const [jsonInput, setJsonInput] = useState('');
+//   const { ceramic, composeClient, isAuthenticated } = useCeramicContext();
 
-    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];  
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = (e: ProgressEvent<FileReader>) => {
-                if (typeof e.target?.result === 'string') {
-                    setJsonInput(e.target.result); 
-                } else {
-                    alert('Failed to load the file as text');
-                }
-            };
-            reader.readAsText(file);
+  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e: ProgressEvent<FileReader>) => {
+        if (typeof e.target?.result === 'string') {
+          setJsonInput(e.target.result);
         } else {
-            alert('No file selected or file access was denied.');
+          alert('Failed to load the file as text');
         }
-    };
+      };
+      reader.readAsText(file);
+    } else {
+      alert('No file selected or file access was denied.');
+    }
+  };
 
-    const addEVPAsset= async () => {
-        console.log("Sending request to API");
-        let jsonData;
+  const addEVPAsset = async () => {
+    // if (!isAuthenticated) {
+    //   alert('Please authenticate first');
+    //   return;
+    // }
 
-        try {
-            jsonData = JSON.parse(jsonInput);
-            console.log(jsonData);
-        } catch (error) {
-            alert('Invalid JSON format');
-            return;
-        }
+    let jsonData;
 
-        const response = await fetch('/api/ceramic/add-asset', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(jsonData),
-        });
+    try {
+      jsonData = JSON.parse(jsonInput);
+      console.log('Inside addEVPAsset: ', jsonData);
+    } catch (error) {
+      alert('Invalid JSON format');
+      return;
+    }
 
-        const result = await response.json();
-        console.log("Response from API:", result);
-        
-        if (result.success) {
-            console.log('Audit Report added successfully:', result.data);
-            alert('Audit Report added successfully');
-        } else {
-            console.error('Failed to add audit report:', result.message);
-            alert('Failed to add audit report');
-        }
-    };
+    const response = await fetch('/api/ceramic/add-asset', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(jsonData),
+    });
 
-    return (
-        <div>
-            <h1>Add Audit Report</h1>
-            <textarea
-                value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
-                placeholder="Paste your JSON here or upload a file below."
-                style={{ width: '300px', height: '200px' }}
-            />
-            <div>
-                <input type="file" onChange={handleFileUpload} accept=".json" />
-            </div>
-            <button onClick={addEVPAsset}>Submit EVP Report</button>
-        </div>
-    );
+    const result = await response.json();
+    console.log('Response from API:', result);
+
+    if (result.success) {
+      console.log('Audit Report added successfully:', result.data);
+      alert('Audit Report added successfully');
+    } else {
+      console.error('Failed to add audit report:', result.message);
+      alert('Failed to add audit report');
+    }
+  };
+
+  return (
+    <div>
+      <h1>Add Audit Report</h1>
+      <textarea
+        value={jsonInput}
+        onChange={(e) => setJsonInput(e.target.value)}
+        placeholder="Paste your JSON here or upload a file below."
+        style={{ width: '300px', height: '200px' }}
+      />
+      <div>
+        <input type="file" onChange={handleFileUpload} accept=".json" />
+      </div>
+      <button onClick={addEVPAsset}>Submit EVP Report</button>
+    </div>
+  );
 }
