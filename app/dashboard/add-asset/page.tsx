@@ -2,11 +2,13 @@
 'use client';
 
 import React, { useState } from 'react';
-// import { useCeramicContext } from '@root/context/CeramicContext';
+import { useCeramicContext } from '@root/context/CeramicContext';
 
 export default function AddAssetPage() {
+  const clients = useCeramicContext();
+  const {ceramic, composeClient} = clients; 
+
   const [jsonInput, setJsonInput] = useState('');
-//   const { ceramic, composeClient, isAuthenticated } = useCeramicContext();
 
   const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -26,10 +28,6 @@ export default function AddAssetPage() {
   };
 
   const addEVPAsset = async () => {
-    // if (!isAuthenticated) {
-    //   alert('Please authenticate first');
-    //   return;
-    // }
 
     let jsonData;
 
@@ -41,6 +39,7 @@ export default function AddAssetPage() {
       return;
     }
 
+    console.log('Sending request to /api/ceramic/add-asset with data:', jsonData);
     const response = await fetch('/api/ceramic/add-asset', {
       method: 'POST',
       headers: {

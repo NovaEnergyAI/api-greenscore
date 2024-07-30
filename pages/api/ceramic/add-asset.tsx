@@ -1,22 +1,66 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { authenticateCeramic } from '../../../scripts/authenticate';
-import { ceramic, composeClient } from '../../../context/CeramicContext';
+import { CeramicClient } from '@ceramicnetwork/http-client';
+import { ComposeClient } from '@composedb/client';
+import { fromString } from 'uint8arrays/from-string';
+import { RuntimeCompositeDefinition } from '@composedb/types';
+import { Ed25519Provider } from 'key-did-provider-ed25519';
+import { DID } from 'dids';
+import KeyResolver from 'key-did-resolver';
+
+import { definition } from '@root/composites/runtime-composite';
+
+const uniqueKey = process.env.AUTHOR_KEY;
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'POST') {
-    console.log("Received request body: ", req.body);
+  console.log('Request received at /api/ceramic/add-asset');
 
-    const { type, greenscore, audit_document } = req.body;
+  // Instantiate a ceramic client instance:
+  const ceramic = new CeramicClient('http://localhost:7007');
 
-    try {
-      // Ensure authentication before proceeding
-      if (!ceramic.did) {
-        await authenticateCeramic(ceramic, composeClient);
-      }
+  // Instantiate a ComposeDB client instance:
+  const composeClient = new ComposeClient({
+    ceramic: 'http://localhost:7007',
+    definition: definition as RuntimeCompositeDefinition,
+  });
 
-      const mutation = `
-        mutation CreateStorageProviderAuditReportDocument($input: CreateStorageProviderAuditReportDocumentInput!) {
-          createStorageProviderAuditReportDocument(input: $input) {
+  // Authenticate developer DID in order to create a write transaction:
+  const authenticateDID = async (seed: string) => {
+    const key = fromString(seed, 'base16');
+    const provider = new Ed25519Provider(key);
+    const staticDid = new DID({
+      resolver: KeyResolver.getResolver(),
+      provider,
+    });
+
+    await staticDid.authenticate();
+    ceramic.did = staticDid;
+    return staticDid;
+  };
+
+  console.log('Received request body: ', req.body);
+
+  const { type, greenscore, audit_document } = req.body;
+  console.log('type: ', type, '\ngreenscore: ', greenscore, '\naudit_document', audit_document);
+
+  if (!type || !greenscore || !audit_document) {
+    res.status(400).json({ success: false, message: 'Missing required fields' });
+    return;
+  }
+
+  try {
+    if(uniqueKey){
+      const did = await authenticateDID(uniqueKey);
+      composeClient.setDID(did);
+
+      const data: any = await composeClient.executeQuery(`
+        mutation {
+          createStorageProviderAuditReportDocument(input: {
+            content: {
+              type: "${type}",
+              greenscore: ${JSON.stringify(greenscore).replace(/"([^"]+)":/g, '$1:')},
+              audit_document: ${JSON.stringify(audit_document).replace(/"([^"]+)":/g, '$1:')}
+            }
+          }) {
             document {
               id
               type
@@ -223,33 +267,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
           }
         }
-      `;
+      `);
 
-      const variables = {
-        input: {
-          content: {
-            type,
-            greenscore,
-            audit_document,
-          }
-        }
-      };
+      console.log('Mutation Result: ', data.toString());
 
-      const mutationResult = await composeClient.executeQuery(mutation, variables);
-      console.log("Mutation Result: ", mutationResult);
-
-      if (mutationResult.errors) {
-        console.error("Mutation Errors: ", mutationResult.errors);
-        res.status(500).json({ success: false, message: mutationResult.errors[0].message });
+      if (data.errors) {
+        console.error('Mutation Errors: ', data.errors);
+        res.status(500).json({ success: false, message: data.errors[0].message });
       } else {
-        res.status(200).json({ success: true, data: mutationResult.data });
+        res.status(200).json({ success: true, data: data.data });
       }
-    } catch (error) {
-      console.error("Error executing mutation: ", error);
-      res.status(500).json({ success: false, message: error.message });
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+  } catch (error) {
+    console.error('Error executing mutation: ', error);
+    res.status(500).json({ success: false, message: error.message });
   }
 }
