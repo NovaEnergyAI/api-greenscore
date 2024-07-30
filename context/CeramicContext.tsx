@@ -1,16 +1,15 @@
-'use client'; // Add this directive at the top
+'use client'; 
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
+import { createContext, useContext, useEffect, useState} from 'react';
 import { CeramicClient } from '@ceramicnetwork/http-client';
 import { ComposeClient } from '@composedb/client';
 
 import { definition } from '../composites/runtime-composite';
 import { RuntimeCompositeDefinition } from '@composedb/types';
 import { authenticateCeramic } from '../scripts/authenticate';
-import { authenticateCeramicServer } from '../scripts/authenticate-server';
 
 /**
- * Configure ceramic Client & create context.
+ * Configures ceramic Client & create context.
  */
 const ceramic = new CeramicClient('http://localhost:7007');
 
@@ -23,7 +22,6 @@ const CeramicContext = createContext({
   ceramic,
   composeClient,
   isAuthenticated: false,
-  getAuthenticatedCeramic: async () => ({ ceramic, composeClient }),
 });
 
 export const CeramicWrapper = ({ children }: any) => {
@@ -33,7 +31,6 @@ export const CeramicWrapper = ({ children }: any) => {
     const initCeramic = async () => {
       if (typeof window !== 'undefined' && localStorage.getItem('logged_in')) {
         await authenticateCeramic(ceramic, composeClient);
-        await authenticateCeramicServer(ceramic, composeClient);
         setIsAuthenticated(true);
       }
     };
@@ -42,7 +39,7 @@ export const CeramicWrapper = ({ children }: any) => {
   }, []);
 
   return (
-    <CeramicContext.Provider value={{ ceramic, composeClient, isAuthenticated, getAuthenticatedCeramic}}>
+    <CeramicContext.Provider value={{ ceramic, composeClient, isAuthenticated}}>
       {children}
     </CeramicContext.Provider>
   );
