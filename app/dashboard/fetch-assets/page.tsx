@@ -26,6 +26,7 @@ const FetchAssetsPage = () => {
       const response = await fetch('/api/ceramic/fetch-assets');
       if (response.ok) {
         const result = await response.json();
+        console.log(result);
         if (result.success && result.data) {
           setEVPOutputs(result.data);
         } else {
@@ -53,12 +54,14 @@ const FetchAssetsPage = () => {
       <ul>
         {evpOutputs.map((node, index) => (
           <li key={index}>
-            <h2>{node.type}</h2>
+            <hr />
+            <p>Type: {node.type}</p>
             <p>Date: {node.greenscore.date}</p>
             <p>Green Score: {node.greenscore.greenscoreDetails.green_score}</p>
             <p>Created At: {node.audit_document.created_at}</p>
             <p>Stream ID: {node.id}</p>
-            <p>Metadata: {JSON.stringify(node.metadata)}</p>
+            <p>Metadata - CID: {node.metadata.model?._cid["/"]}</p>
+            <p>Metadata - Controller: {node.metadata.controller}</p>
           </li>
         ))}
       </ul>

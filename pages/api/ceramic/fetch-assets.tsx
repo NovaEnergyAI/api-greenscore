@@ -239,6 +239,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const evpOutputsMetadata = await Promise.all(
       edges.map(async ({ node }) => {
         const stream = await ceramic.loadStream(node.id);
+        console.log("stream:" + stream);
         return {
           ...node,
           metadata: stream.metadata,
