@@ -14,7 +14,7 @@ import clsx from 'clsx';
 const links = [
   { name: 'Authenticate', href: '/dashboard/authenticate', icon: KeyIcon },
   { name: 'Add Asset', href: '/dashboard/add-asset', icon: PlusIcon },
-  { name: 'Get All Assets', href: '/dashboard/get-assets', icon: ClipboardDocumentCheckIcon },
+  { name: 'Fetch Assets', href: '/dashboard/fetch-assets', icon: ClipboardDocumentCheckIcon },
   { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
   // { name: 'Add Template', href: '/dashboard/add-template', icon: PlusIcon },
   // { name: 'Get Templates', href: '/dashboard/get-templates', icon: Squares2X2Icon },
