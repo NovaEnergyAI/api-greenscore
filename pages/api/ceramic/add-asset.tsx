@@ -37,11 +37,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     return staticDid;
   };
 
-  console.log('Received request body: ', req.body);
-
   const { type, greenscore, audit_document } = req.body;
-  console.log('type: ', type, '\ngreenscore: ', greenscore, '\naudit_document', audit_document);
-
+  
   if (!type || !greenscore || !audit_document) {
     res.status(400).json({ success: false, message: 'Missing required fields' });
     return;
@@ -269,13 +266,17 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         }
       `);
 
-      console.log('Mutation Result: ', data.toString());
-
       if (data.errors) {
         console.error('Mutation Errors: ', data.errors);
         res.status(500).json({ success: false, message: data.errors[0].message });
       } else {
-        res.status(200).json({ success: true, data: data.data });
+
+        // Load the stream content + metadata using the returned ceramic ID:
+        const streamId = data.data.createStorageProviderAuditReportDocument.document.id;
+        const stream = await ceramic.loadStream(streamId);
+        const metadata = stream.metadata;
+
+        res.status(200).json({ success: true, data: data.data, metadata});
       }
     }
   } catch (error) {

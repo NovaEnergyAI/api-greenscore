@@ -33,7 +33,6 @@ export default function AddAssetPage() {
 
     try {
       jsonData = JSON.parse(jsonInput);
-      console.log('Inside addEVPAsset: ', jsonData);
     } catch (error) {
       alert('Invalid JSON format');
       return;
@@ -52,11 +51,9 @@ export default function AddAssetPage() {
     console.log('Response from API:', result);
 
     if (result.success) {
-      console.log('Audit Report added successfully:', result.data);
       alert('Audit Report added successfully');
     } else {
-      console.error('Failed to add audit report:', result.message);
-      alert('Failed to add audit report');
+      alert('Failed to add audit report:\nError - ' + result.message);
     }
   };
 

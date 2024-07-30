@@ -17,7 +17,6 @@ const AuthenticatePage = () => {
     try {
       localStorage.setItem('ceramic:auth_type', 'key');
       await authenticateCeramic(ceramic, composeClient);
-      console.log('Key DID authentication successful (page.tsx)');
     } catch (error) {
       console.error('Key DID Authentication failed! ', error);
     }
@@ -27,7 +26,6 @@ const AuthenticatePage = () => {
     try {
       localStorage.setItem('ceramic:auth_type', 'eth');
       await authenticateCeramic(ceramic, composeClient);
-      console.log('Ethereum PKH authentication successful (page.tsx)');
     } catch (error) {
       console.error('Ethereum PKH Authentication failed! ', error);
     }
