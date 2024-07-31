@@ -271,12 +271,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         res.status(500).json({ success: false, message: data.errors[0].message });
       } else {
 
-        // Load the stream content + metadata using the returned ceramic ID:
+        // Load the stream content + state using the returned ceramic ID:
         const streamId = data.data.createStorageProviderAuditReportDocument.document.id;
         const stream = await ceramic.loadStream(streamId);
-        const metadata = stream.metadata;
+        const state = stream.state;
 
-        res.status(200).json({ success: true, data: data.data, metadata});
+        res.status(200).json({ success: true, data: data.data, state});
       }
     }
   } catch (error) {

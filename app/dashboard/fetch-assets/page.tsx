@@ -14,7 +14,7 @@ interface EVPNode {
   audit_document: {
     created_at: string;
   };
-  metadata: any;
+  state: any;
 }
 
 const FetchAssetsPage = () => {
@@ -60,8 +60,8 @@ const FetchAssetsPage = () => {
             <p>Green Score: {node.greenscore.greenscoreDetails.green_score}</p>
             <p>Created At: {node.audit_document.created_at}</p>
             <p>Stream ID: {node.id}</p>
-            <p>Metadata - CID: {node.metadata.model?._cid["/"]}</p>
-            <p>Metadata - Controller: {node.metadata.controller}</p>
+            <p>Metadata - CID: {JSON.stringify(node.state.log)}</p>
+            <p>Metadata - Controller: {node.state.metadata.controller}</p>
           </li>
         ))}
       </ul>

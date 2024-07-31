@@ -235,20 +235,19 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Type assertion for the data:
     const edges = (data as any).data.storageProviderAuditReportDocumentIndex.edges;
 
-    // Load the metadata for each document:
-    const evpOutputsMetadata = await Promise.all(
+    // Load the states for each document:
+    const evpOutputsState = await Promise.all(
       edges.map(async ({ node }) => {
         const stream = await ceramic.loadStream(node.id);
-        console.log("stream:" + stream);
         return {
           ...node,
-          metadata: stream.metadata,
+          state: stream.state,
         };
       })
     );
 
-    console.log("evpOutputsMetadata: ", evpOutputsMetadata);
-    res.status(200).json({ success: true, data: evpOutputsMetadata});
+    console.log("evpOutputsState: ", evpOutputsState);
+    res.status(200).json({ success: true, data: evpOutputsState});
   } catch (error) {
     console.error("Error fetching data from Ceramic:", error);
     res.status(500).json({ message: "Failed to fetch data" });
