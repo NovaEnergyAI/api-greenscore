@@ -4,17 +4,35 @@ import React, { useEffect, useState } from 'react';
 
 interface EVPNode {
   id: string; 
-  type: string;
-  greenscore: {
-    date: string;
-    greenscoreDetails: {
-      green_score: number;
+  content: {
+    type: string;
+    greenscore: {
+      date: string;
+      greenscoreDetails: {
+        green_score: number;
+      };
+    };
+    audit_document: {
+      created_at: string;
     };
   };
-  audit_document: {
-    created_at: string;
+  metadata: {
+    controllers: string[];
+    model: {
+      _type: number;
+      _cid: {
+        "/": string;
+      };
+    };
+    unique: Record<string, any>;
   };
-  state: any;
+  log: Array<{
+    cid: {
+      "/": string;
+    };
+    type: number;
+    timestamp: number;
+  }>;
 }
 
 const FetchAssetsPage = () => {
@@ -55,13 +73,14 @@ const FetchAssetsPage = () => {
         {evpOutputs.map((node, index) => (
           <li key={index}>
             <hr />
-            <p>Type: {node.type}</p>
-            <p>Date: {node.greenscore.date}</p>
-            <p>Green Score: {node.greenscore.greenscoreDetails.green_score}</p>
-            <p>Created At: {node.audit_document.created_at}</p>
+            <p>Type: {node.content.type}</p>
+            <p>Date: {node.content.greenscore.date}</p>
+            <p>Green Score: {node.content.greenscore.greenscoreDetails.green_score}</p>
+            <p>Created At: {node.content.audit_document.created_at}</p>
             <p>Stream ID: {node.id}</p>
-            <p>Metadata - CID: {JSON.stringify(node.state.log)}</p>
-            <p>Metadata - Controller: {node.state.metadata.controller}</p>
+            <p>Metadata - CID: {node.metadata.model._cid["/"]}</p>
+            <p>Metadata - Controller: {node.metadata.controllers.join(', ')}</p>
+            <p>Log: {node.log.map(logEntry => `CID: ${logEntry.cid["/"]}, Type: ${logEntry.type}, Timestamp: ${logEntry.timestamp}`).join('; ')}</p>
           </li>
         ))}
       </ul>

@@ -239,10 +239,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const evpOutputsState = await Promise.all(
       edges.map(async ({ node }) => {
         const stream = await ceramic.loadStream(node.id);
-        return {
-          ...node,
-          state: stream.state,
-        };
+        return stream.state;
       })
     );
 
