@@ -1,0 +1,272 @@
+# Nova Energy Validation Process (EVP) Attestations DB
+type NovaEVPAttestationsDB @createModel(
+  accountRelation: LIST
+  description: "A comprehensive EVP Report Database Template for capturing environmental and sustainability data."
+) @createIndex(fields: [{ path: ["type"] }]) {
+  evpId: String @string(maxLength: 100)                                  # Unique identifier for the attestation
+  organizationId: String @string(maxLength: 100)                         # Organization associated with the attestation
+  type: String @string(maxLength: 256)                                   # Type of the document (e.g., evp-document)
+  createdAt: String @string(maxLength: 256)                              # Timestamp when the audit document was created
+  evpReportDB: EVPReportDB                                               # Embedded EVPReportDB document containing the EVP report details
+  greenscoreDB: GreenscoreDB                                             # Embedded GreenscoreDB document containing the greenscore details
+}
+
+# Represents the structure of the EVP Report data stored in the database
+type EVPReportDB {
+  type: String @string(maxLength: 256)                                   # Type of EVP report
+  createdAt: String @string(maxLength: 256)                              # Timestamp of report creation
+  updatedAt: String @string(maxLength: 256)                              # Timestamp of the last update
+  submittedAt: String @string(maxLength: 256)                            # Timestamp when the report was submitted
+  auditStatus: Float                                                     # Current status of the audit review
+  entityCompany: String @string(maxLength: 256)                          # Name of the company being evaluated
+  providerNetworkType: Float                                             # Type of network provider (e.g., Filecoin, ETH)
+  minerIds: [String] @list(maxLength: 256) @string(maxLength: 256)       # List of miner IDs associated with the report
+  reportStartDate: String @string(maxLength: 256)                        # Start date of the reporting period
+  reportEndDate: String @string(maxLength: 256)                          # End date of the reporting period
+  locationInformation: LocationInformationDB                             # Location details of the provider
+  hardwareConfiguration: HardwareConfigurationDB                         # Details of the hardware used
+  waterConsumption: WaterConsumptionDB                                   # Data on water consumption
+  electricityConsumption: ElectricityConsumptionDB                       # Data on electricity consumption
+  energyProduction: RenewableEnergyProducedDB                            # Information on renewable energy production
+  renewableEnergyProcurement: RenewableEnergyProcuredDB                  # Data on renewable energy procurement
+  preliminaryResultsRecMatching: PreliminaryResultsRecMatchingDB         # Results of preliminary REC matching
+  auditReview: AuditReviewDB                                             # Details of the audit review process
+  greenscoreID: String @string(maxLength: 256)                           # Greenscore evaluation of the provider's sustainability
+}
+
+# Enum for provider network types
+enum ProviderNetworkEnum {
+  FILECOIN_SP       # Represents Filecoin Storage Provider
+  ETH_VALIDATOR     # Represents Ethereum Validator
+  SOLANA_VALIDATOR  # Represents Solana Validator
+  ICP_NODE_OPERATOR # Represents Internet Computer Node Operator
+  BTC_MINER         # Represents Bitcoin Miner
+}
+
+# Provider Location Form type
+type LocationInformationDB {
+  addressConfirmed: Boolean                                               # Indicates whether the address has been confirmed
+  createdAt: String @string(maxLength: 256)                               # Timestamp when the location information was created
+  entityCompany: String @string(maxLength: 256)                           # Name of the company
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+  providerCity: String @string(maxLength: 256)                            # City of the provider
+  providerCountry: String @string(maxLength: 256)                         # Country of the provider
+  providerLocation: String @string(maxLength: 256)                        # Detailed location address of the provider
+  providerState: String @string(maxLength: 256)                           # State of the provider
+  providerZipcode: String @string(maxLength: 256)                         # Zipcode of the provider
+  status: Float                                                           # Current status of the location information review
+  updatedAt: String @string(maxLength: 256)                               # Timestamp of the last update
+}
+
+# Hardware Configuration DB type
+type HardwareConfigurationDB {
+  status: Float                                                           # Status of the hardware configuration review
+  hardware: HardwareDetailsDB                                             # Detailed information about the hardware
+  createdAt: String @string(maxLength: 256)                               # Timestamp of hardware configuration creation
+  updatedAt: String @string(maxLength: 256)                               # Timestamp of the last update
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+}
+
+# Hardware Details type
+type HardwareDetailsDB {
+  description: String @string(maxLength: 512)                             # Description of the hardware
+  hardwareType: String @string(maxLength: 256)                            # Type of the hardware (e.g., GPU, ASIC)
+  supportingFile: [String] @list(maxLength: 512) @string(maxLength: 256)  # List of supporting files (e.g., images, documentation)
+  hardwareDetails: String @string(maxLength: 512)                         # Additional details about the hardware
+}
+
+# Water Consumption DB type
+type WaterConsumptionDB {
+  status: Float                                                           # Status of the water consumption review
+  createdAt: String @string(maxLength: 256)                               # Timestamp when the water consumption data was created
+  updatedAt: String @string(maxLength: 256)                               # Timestamp of the last update
+  startDate: String @string(maxLength: 256)                               # Start date of the water consumption reporting period
+  endDate: String @string(maxLength: 256)                                 # End date of the water consumption reporting period
+  reference: String @string(maxLength: 256)                               # Reference information for the water consumption data
+  waterUsage: Boolean                                                     # Indicates whether water was used
+  waterConsumed: Float                                                    # Amount of water consumed
+  waterBillFiles: [String] @list(maxLength: 512) @string(maxLength: 256)  # List of water bill files supporting the consumption data
+  waterCompany: String @string(maxLength: 256)                            # Name of the water company
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+}
+
+# Electricity Consumption DB type
+type ElectricityConsumptionDB {
+  actualElectricityConsumed: String @string(maxLength: 256)               # Actual electricity consumed
+  actualElectricityDelivered: String @string(maxLength: 256)              # Actual electricity delivered
+  actualElectricityReturned: String @string(maxLength: 256)               # Actual electricity returned
+  annualElectricityUsage: String @string(maxLength: 256)                  # Annual electricity usage
+  electricityBillFiles: [String] @list(maxLength: 512) @string(maxLength: 256)  # List of electricity bill files supporting the consumption data
+  electricityCompany: String @string(maxLength: 256)                      # Name of the electricity company
+  electricityNotPoweringInfrastructure: String @string(maxLength: 256)    # Electricity that did not power infrastructure
+  endDate: String @string(maxLength: 256)                                 # End date of the electricity consumption reporting period
+  estimationMethodology: String @string(maxLength: 512)                   # Methodology used for estimating electricity consumption
+  reference: String @string(maxLength: 256)                               # Reference information for the electricity consumption data
+  startDate: String @string(maxLength: 256)                               # Start date of the electricity consumption reporting period
+  status: Float                                                           # Status of the electricity consumption review
+  totalElectricityUsedForNodeOperations: Float                            # Total electricity used for node operations
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+}
+
+# Renewable Energy Produced DB type
+type RenewableEnergyProducedDB {
+  createdAt: String @string(maxLength: 256)                               # Timestamp when the renewable energy data was created
+  electricityPurchased: Float                                             # Total electricity purchased
+  frequencyOfMeasurement: String @string(maxLength: 256)                  # Frequency of the renewable energy measurement
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+  inspectionDate: String @string(maxLength: 256)                          # Date of inspection
+  inspectionFiles: [String] @list(maxLength: 512) @string(maxLength: 256) # List of inspection files supporting the energy production data
+  installationDate: String @string(maxLength: 256)                        # Date of installation
+  methodOfMeasurement: String @string(maxLength: 256)                     # Method used for measuring renewable energy production
+  networkRenewableEnergyPurchases: Float                                  #
+  numberOfSolarPanels: Float                                              # Number of solar panels used
+  purchaseFiles: [String] @list(maxLength: 512) @string(maxLength: 256)   # List of purchase files supporting the energy production data
+  renewableEnergyUsage: Boolean                                           # Indicates whether renewable energy was used
+  renewableElectricityPurchased: Float                                    #
+  renewableElectricityPurchasedDocs: Float                                #
+  renewableElectricityPurchasedSource: Float                              #
+  solarPanelBrand: String @string(maxLength: 256)                         # Brand of the solar panels used
+  solarPanelModalNumber: String @string(maxLength: 256)                   # Model number of the solar panels used
+  solarWattPeak: String @string(maxLength: 256)                           # Peak wattage of the solar panels
+  status: Float                                                           # Status of the renewable energy production review
+  totalElectricityControlled: Float                                       # Total electricity controlled by the renewable energy source
+}
+
+# Renewable Energy Procured DB type
+type RenewableEnergyProcuredDB {
+  status: Float                                                           # Status of the renewable energy procurement review
+  endDate: String @string(maxLength: 256)                                 # End date of the renewable energy procurement reporting period
+  createdAt: String @string(maxLength: 256)                               # Timestamp when the renewable energy procurement data was created
+  startDate: String @string(maxLength: 256)                               # Start date of the renewable energy procurement reporting period
+  updatedAt: String @string(maxLength: 256)                               # Timestamp of the last update
+  energyUsage: Boolean                                                    # Indicates whether energy was used
+  documentFiles: [String] @list(maxLength: 512) @string(maxLength: 256)   # List of documents supporting the energy procurement data
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+  supportingFiles: [String] @list(maxLength: 512) @string(maxLength: 256) # List of supporting files
+  renewableEnergyType: String @string(maxLength: 256)                     # Type of renewable energy procured
+  actualElectricityDelivered: String @string(maxLength: 256)              # Actual electricity delivered
+  actualElectricityReturned: String @string(maxLength: 256)               # Actual electricity returned
+  networkRenewableEnergyPurchases: Float                                  # Total renewable energy purchases by the network
+  electricityPurchased: Float                                             # Total electricity purchased
+  renewableEnergyPurchasedFrom: String @string(maxLength: 256)            # Source from which renewable energy was purchased
+  networkRenewableElectricityPurchasedSource: String @string(maxLength: 256)  # Source of the network's renewable electricity purchases
+  networkRenewableElectricityPurchasedDocs: String @string(maxLength: 256)  # Documents supporting the network's renewable electricity purchases
+}
+
+# Preliminary Results Rec Matching DB type
+type PreliminaryResultsRecMatchingDB {
+  status: Float                                                           # Status of the REC matching review
+  endDate: String @string(maxLength: 256)                                 # End date of the REC matching reporting period
+  createdAt: String @string(maxLength: 256)                               # Timestamp when the REC matching data was created
+  startDate: String @string(maxLength: 256)                               # Start date of the REC matching reporting period
+  updatedAt: String @string(maxLength: 256)                               # Timestamp of the last update
+  actualElectricityConsumed: String @string(maxLength: 256)               # Actual electricity consumed
+  actualElectricityDelivered: String @string(maxLength: 256)              # Actual electricity delivered
+  actualElectricityReturned: String @string(maxLength: 256)               # Actual electricity returned
+  emissionsFactor: Float                                                  # Emissions factor associated with the electricity consumption
+  totalEmissions: Float                                                   # Total emissions produced
+  supportingFile: String @string(maxLength: 512)                          # Supporting file for REC matching data
+  timePeriod: String @string(maxLength: 256)                              # Time period covered by the REC matching data
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+}
+
+# Audit Review DB type
+type AuditReviewDB {
+  providerEvpStatus: Float                                                # Status of the provider's EVP submission
+  reviewStatus: Float                                                     # Status of the audit review
+  auditorEvpSubmissionDate: String @string(maxLength: 256)                # Date when the auditor submitted the EVP
+  providerEvpSubmissionDate: String @string(maxLength: 256)               # Date when the provider submitted the EVP
+  reportOption: Float                                                     # Option for the report output
+}
+
+# Greenscore DB type
+type GreenscoreDB {
+  benchmarkEmissionIntensity: Float                                       # Benchmark emission intensity
+  benchmarkMarginalEmissionIntensity: Float                               # Benchmark marginal emission intensity
+  confidenceScore: Float                                                  # Confidence score of the greenscore
+  confidenceScoreDetails: GreenscoreConfidenceScoreDetailsDB              # Detailed confidence scores
+  createdAt: String @string(maxLength: 256)                               # Timestamp when the greenscore data was created
+  documentId: String @string(maxLength: 256)                              # ID of the associated document
+  providerNetworkType: String @string(maxLength: 256)                     # Type of the provider network
+  minerIds: [String] @list(maxLength: 256) @string(maxLength: 256)        # List of miner IDs associated with the greenscore
+  emissionIntensityCalculation: String @string(maxLength: 512)            # Calculation method for emission intensity
+  emissionsScore: Float                                                   # Emissions score
+  entityCompany: String @string(maxLength: 256)                           # Name of the entity being scored
+  isHistoricData: Boolean                                                 # Indicates whether the data is historic
+  globalAverageGridEmissionsFactor: Float                                 # Global average grid emissions factor
+  globalAverageGridEmissionsFactorSource: String @string(maxLength: 512)  # Source of the global average grid emissions factor
+  globalAverageMarginalEmissionFactor: Float                              # Global average marginal emission factor
+  globalAverageMarginalEmissionFactorSource: String @string(maxLength: 512)  # Source of the global average marginal emission factor
+  globalMarginalEmissionsFactor: Float                                    # Global marginal emissions factor
+  greenScore: Float                                                       # GreenScore value
+  greenscoreId: String @string(maxLength: 256)                           # Identifier for the greenscore
+  gridEmissionsFactor: String @string(maxLength: 256)                     # Grid emissions factor
+  locationScore: Float                                                    # Location-based score
+  marginalEmissionsFactor: Float                                          # Marginal emissions factor
+  marginalEmissionsIntensity: Float                                       # Marginal emissions intensity
+  networkMarginalEmissions: NetworkMarginalEmissionsDB                    # Network marginal emissions details
+  networkScope2EmissionsCalculation: NetworkScope2EmissionsCalculationDB  # Network scope 2 emissions calculation details
+  normalizedEmissionsIntensity: Float                                     # Normalized emissions intensity
+  normalizedMarginalEmissionIntensity: Float                              # Normalized marginal emission intensity
+  providerCountry: String @string(maxLength: 256)                         # Country of the provider
+  providerCity: String @string(maxLength: 256)                            # City of the provider
+  providerLocationCode: String @string(maxLength: 256)                    # Location code of the provider
+  providerLocation: String @string(maxLength: 256)                        # Detailed location of the provider
+  reportEndDate: String @string(maxLength: 256)                           # End date of the reporting period
+  reportStartDate: String @string(maxLength: 256)                         # Start date of the reporting period
+  scope2EmissionsCalculation: Scope2EmissionsCalculationDB                # Scope 2 emissions calculation details
+  status: Float                                                           # Status of the greenscore review
+  type: String @string(maxLength: 256)                                    # Type of the greenscore document
+  updatedAt: String @string(maxLength: 256)                               # Timestamp of the last update
+  other: OtherGreenscoreInformationDB                                     # Other information related to the greenscore
+}
+
+# Scope2EmissionsCalculation DB type
+type Scope2EmissionsCalculationDB {
+  actualNetPowerConsumed: Float                                           # Actual net power consumed
+  gridEmissionsFactor: Float                                              # Grid emissions factor used in calculations
+  renewableEnergyConsumption: Float                                       # Renewable energy consumption value
+  averageDataStorageCapacity: Float                                       # Average data storage capacity
+  scope2Emissions: Float                                                  # Calculated scope 2 emissions
+}
+
+# Other Greenscore Information type
+type OtherGreenscoreInformationDB {
+  co2StorageBlockCid: String @string(maxLength: 512)                      # CID of the CO2 storage block
+  co2StorageContentCid: String @string(maxLength: 512)                    # CID of the CO2 storage content
+  co2StoragePreviousAssetCid: String @string(maxLength: 512)              # CID of the previous CO2 storage asset
+  notesOnDataSources: String @string(maxLength: 512)                      # Notes on the data sources used
+  informationAboutGreenScoreMeasurementType: String @string(maxLength: 512)  # Information about the measurement type used in greenscore
+}
+
+# Greenscore Confidence Score Details DB type
+type GreenscoreConfidenceScoreDetailsDB {
+  locationConfidence: Float                                               # Confidence score related to the location information
+  locationInformationPercentageInformation: String @string(maxLength: 512)# Percentage information for location confidence
+  nodeIdConfidence: Float                                                 # Confidence score related to the node ID
+  nodeIDConfidencePercentageInformation: String @string(maxLength: 512)   # Percentage information for node ID confidence
+  hardwareConfidence: Float                                               # Confidence score related to the hardware
+  hardwareConfidencePercentageInformation: String @string(maxLength: 512) # Percentage information for hardware confidence
+  waterUseConfidence: Float                                               # Confidence score related to water use
+  waterUseConfidencePercentageInformation: String @string(maxLength: 512) # Percentage information for water use confidence
+  energyUseConfidence: Float                                              # Confidence score related to energy use
+  energyUseConfidencePercentageInformation: String @string(maxLength: 512)# Percentage information for energy use confidence
+}
+
+# Network Marginal Emissions DB type
+type NetworkMarginalEmissionsDB {
+  totalNetworkElectricityConsumption: Float                               # Total electricity consumption across the network
+  totalNetworkRenewableEnergyProduction: Float                            # Total renewable energy production across the network
+  globalAverageGridEmissionsFactor: Float                                 # Global average grid emissions factor for the network
+  globalAverageGridEmissionsFactorSource: String @string(maxLength: 512)  # Source of the global average grid emissions factor
+  networkMarginalEmissions: Float                                         # Total marginal emissions for the network
+}
+
+# Network Scope2 Emissions CalculationDB type
+type NetworkScope2EmissionsCalculationDB {
+  estimateCumulativeEnergyUsePerTime: Float                               # Estimated cumulative energy use per time period
+  averageRawByteCapacityForReportingTime: Float                           # Average raw byte capacity for the reporting period
+  globalAverageGridEmissionsFactor: Float                                 # Global average grid emissions factor
+  networkAverageRenewableEnergyPurchases: Float                           # Network's average renewable energy purchases
+  networkScope2Emissions: Float                                           # Total scope 2 emissions for the network
+}

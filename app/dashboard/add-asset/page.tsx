@@ -1,75 +1,108 @@
-// app/dashboard/add-asset/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { authenticateCeramic } from '@root/scripts/authenticate';
 import { useCeramicContext } from '@root/context/CeramicContext';
 
 export default function AddAssetPage() {
+  const [documentId, setDocumentId] = useState('');
+  const [session, setSession] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const clients = useCeramicContext();
-  const {ceramic, composeClient} = clients; 
+  const { ceramic, composeClient } = clients;
 
-  const [jsonInput, setJsonInput] = useState('');
-
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        if (typeof e.target?.result === 'string') {
-          setJsonInput(e.target.result);
+  useEffect(() => {
+    // Load the session from localStorage
+    const initializeSession = async () => {
+      try {
+        const storedSession = localStorage.getItem('ceramic:eth_did');
+        if (storedSession) {
+          setSession(storedSession);
+          setIsAuthenticated(true);
+          console.log('Session restored from localStorage:', storedSession);
         } else {
-          alert('Failed to load the file as text');
+          console.warn('No stored session found. Please authenticate.');
+          setIsAuthenticated(false);
         }
-      };
-      reader.readAsText(file);
-    } else {
-      alert('No file selected or file access was denied.');
+      } catch (error) {
+        console.error('Failed to authenticate:', error);
+        setIsAuthenticated(false);
+      }
+    };
+
+    initializeSession();
+  }, [ceramic, composeClient]);
+
+  const handleAuthenticate = async () => {
+    try {
+      localStorage.setItem('ceramic:auth_type', 'eth'); // Set the correct auth type
+      await authenticateCeramic(ceramic, composeClient);
+      const newSession = localStorage.getItem('ceramic:eth_did');
+      if (newSession) {
+        setSession(newSession);
+        setIsAuthenticated(true);
+      }
+    } catch (error) {
+      console.error('Authentication failed:', error);
     }
   };
 
-  const addEVPAsset = async () => {
-
-    let jsonData;
-
-    try {
-      jsonData = JSON.parse(jsonInput);
-    } catch (error) {
-      alert('Invalid JSON format');
+  const sendToCeramic = async () => {
+    if (!session) {
+      alert('Session is not available. Please authenticate first.');
       return;
     }
 
-    console.log('Sending request to /api/ceramic/add-asset with data:', jsonData);
-    const response = await fetch('/api/ceramic/add-asset', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(jsonData),
-    });
+    if (!documentId) {
+      alert('Please enter a document ID.');
+      return;
+    }
 
-    const result = await response.json();
-    console.log('Response from API:', result);
+    try {
+      // Send the document ID and session to the backend server
+      const response = await fetch('http://localhost:10000/api/ceramic/add-asset', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ document_id: documentId, session }),
+      });
 
-    if (result.success) {
-      alert('Audit Report added successfully');
-    } else {
-      alert('Failed to add audit report:\nError - ' + result.message);
+      const result = await response.json();
+      console.log('Response from API:', result);
+
+      if (result.success) {
+        alert('Data saved to Ceramic and Postgres successfully');
+      } else {
+        alert('Failed to save data:\nError - ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error sending data to Ceramic:', error);
+      alert('An error occurred while sending data to Ceramic.');
     }
   };
 
   return (
     <div>
-      <h1>Add Audit Report</h1>
-      <textarea
-        value={jsonInput}
-        onChange={(e) => setJsonInput(e.target.value)}
-        placeholder="Paste your JSON here or upload a file below."
-        style={{ width: '300px', height: '200px' }}
-      />
-      <div>
-        <input type="file" onChange={handleFileUpload} accept=".json" />
-      </div>
-      <button onClick={addEVPAsset}>Submit EVP Report</button>
+      <h1>Send Document to Ceramic</h1>
+      {isAuthenticated ? (
+        <>
+          <input
+            type="text"
+            value={documentId}
+            onChange={(e) => setDocumentId(e.target.value)}
+            placeholder="Enter Document ID"
+          />
+          <button onClick={sendToCeramic}>Submit Document to Ceramic</button>
+        </>
+      ) : (
+        <div>
+          <p>Please authenticate to proceed with adding assets.</p>
+          <button onClick={handleAuthenticate}>
+            Authenticate with Ethereum DID PKH
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 
-// Use dynamic imports for ESM modules
+// Using dynamic imports for ESM modules
 async function loadModules() {
   const { CeramicClient } = await import('@ceramicnetwork/http-client');
   const { DID } = await import('dids');

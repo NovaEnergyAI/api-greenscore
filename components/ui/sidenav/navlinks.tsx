@@ -16,7 +16,6 @@ const links = [
   { name: 'Add Asset', href: '/dashboard/add-asset', icon: PlusIcon },
   { name: 'Fetch Assets', href: '/dashboard/fetch-assets', icon: ClipboardDocumentCheckIcon },
   { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
-  // { name: 'Add Template', href: '/dashboard/add-template', icon: PlusIcon },
   // { name: 'Get Templates', href: '/dashboard/get-templates', icon: Squares2X2Icon },
 ];
 
