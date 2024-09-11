@@ -4,7 +4,6 @@ import { EthereumWebAuth, getAccountId } from '@didtools/pkh-ethereum';
 import type { CeramicApi } from '@ceramicnetwork/common';
 import type { ComposeClient } from '@composedb/client';
 
-// Ensure correct type declarations for window.ethereum
 declare global {
   interface Window {
     ethereum: any;
