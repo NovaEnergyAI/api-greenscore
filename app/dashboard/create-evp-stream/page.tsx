@@ -90,9 +90,14 @@ export default function CreateEVPStreamPage() {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: 'left' }}>
       <ToastContainer />
-      <h1>Send Document to Ceramic</h1>
+      <h2>Send Document to Ceramic</h2>
+      <p style={{ paddingTop: '10px', marginBottom: '10px' }}>
+        {isAuthenticated
+          ? 'Enter the Document ID below and click "Submit Document to Ceramic" to send your data.'
+          : 'Please authenticate to proceed with adding assets. Click "Authenticate with Ethereum DID PKH" to continue.'}
+      </p>
       {isAuthenticated ? (
         <>
           <input
@@ -102,30 +107,31 @@ export default function CreateEVPStreamPage() {
             placeholder="Enter Document ID"
             style={{ padding: '8px', marginBottom: '10px', width: '300px' }}
           />
-          <button onClick={sendToCeramic} style={{ padding: '8px 16px', marginLeft: '10px' }}>
+          <button 
+            onClick={sendToCeramic} 
+            style={{ padding: '8px 16px', marginLeft: '10px', background: '#000', color: '#fff'}}>
             Submit Document to Ceramic
           </button>
-
-          {streamData && (
-            <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
-              <h2>Stream Data Result</h2>
-              <p><strong>Stream ID:</strong> {streamData.streamId}</p>
-              <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
-              <p><strong>Entity Company:</strong> {streamData.state.content.evpReportDB?.entityCompany || 'N/A'}</p>
-              <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>
-              <p><strong>Provider City:</strong> {streamData.state.content.greenscoreDB?.providerCity || 'N/A'}</p>
-              <pre style={{ background: '#f8f8f8', padding: '10px' }}>
-                {JSON.stringify(streamData.state, null, 2)}
-              </pre>
-            </div>
-          )}
         </>
       ) : (
         <div>
-          <p>Please authenticate to proceed with adding assets.</p>
-          <button onClick={handleAuthenticate}>
+          <button onClick={handleAuthenticate} style={{ padding: '8px 16px', marginTop: '10px' }}>
             Authenticate with Ethereum DID PKH
           </button>
+        </div>
+      )}
+
+      {streamData && (
+        <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
+          <h3>Stream Data Result</h3>
+          <p><strong>Stream ID:</strong> {streamData.streamId}</p>
+          <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
+          <p><strong>Entity Company:</strong> {streamData.state.content.evpReportDB?.entityCompany || 'N/A'}</p>
+          <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>
+          <p><strong>Provider City:</strong> {streamData.state.content.greenscoreDB?.providerCity || 'N/A'}</p>
+          <pre style={{ background: '#f8f8f8', padding: '10px' }}>
+            {JSON.stringify(streamData.state, null, 2)}
+          </pre>
         </div>
       )}
     </div>

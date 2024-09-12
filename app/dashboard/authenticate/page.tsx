@@ -50,7 +50,7 @@ const AuthPrompt = () => {
   };
 
   return (
-    <div style={{ textAlign: 'left', marginTop: '20px' }}>
+    <div style={{ textAlign: 'left' }}>
       <ToastContainer />
       <h2>Authenticate</h2>
       {isAuthenticated ? (

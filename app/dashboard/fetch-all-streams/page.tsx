@@ -66,7 +66,7 @@ const FetchAllStreamsPage = () => {
   return (
     <div>
       <ToastContainer />
-      <h1>Fetches All EVPs from Ceramic</h1>
+      <h2>Fetches All EVPs from Ceramic</h2>
       {error && <p>{error}</p>}
       <ul>
         {evpOutputs.map((node, index) => (

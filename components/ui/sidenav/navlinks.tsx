@@ -16,7 +16,7 @@ const links = [
   { name: 'Create EVP Stream', href: '/dashboard/create-evp-stream', icon: PlusIcon },
   { name: 'Fetch A Stream', href: '/dashboard/fetch-stream', icon: ClipboardDocumentCheckIcon },
   { name: 'Fetch All Streams', href: '/dashboard/fetch-all-streams', icon: ClipboardDocumentCheckIcon },
-  { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
+  // { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
 ];
 
 export default function NavLinks() {

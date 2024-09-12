@@ -47,9 +47,12 @@ const FetchStreamPage = () => {
   };
 
   return (
-    <div>
+    <div style={{ textAlign: 'left' }}>
       <ToastContainer />
-      <h1>Fetch EVP Stream from Ceramic</h1>
+      <h2>Fetch EVP Stream from Ceramic</h2>
+      <p style={{ paddingTop: '10px', marginBottom: '10px' }}>
+        To fetch an EVP stream, enter the Stream ID below and click "Fetch Stream".
+      </p>
       <input
         type="text"
         value={streamId}
@@ -57,13 +60,15 @@ const FetchStreamPage = () => {
         placeholder="Enter Stream ID"
         style={{ padding: '8px', marginBottom: '10px', width: '300px' }}
       />
-      <button onClick={fetchStream} style={{ padding: '8px 16px', marginLeft: '10px' }}>
+      <button 
+        onClick={fetchStream}
+        style={{ padding: '8px 16px', marginLeft: '10px', background: '#000', color: '#fff' }}>
         Fetch Stream
       </button>
       {error && <p style={{ color: 'red' }}>{error}</p>}
       {streamData && (
         <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
-          <h2>Stream Data Result</h2>
+          <h3>Stream Data Result</h3>
           <pre style={{ background: '#f8f8f8', padding: '10px', overflowX: 'auto' }}>
             {JSON.stringify(streamData.state, null, 2)}
           </pre>
