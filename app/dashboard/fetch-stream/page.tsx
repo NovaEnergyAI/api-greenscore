@@ -60,7 +60,7 @@ const FetchStreamPage = () => {
         placeholder="Enter Stream ID"
         style={{ padding: '8px', marginBottom: '10px', width: '300px' }}
       />
-      <button 
+      <button
         onClick={fetchStream}
         style={{ padding: '8px 16px', marginLeft: '10px', background: '#000', color: '#fff' }}>
         Fetch Stream
@@ -69,7 +69,11 @@ const FetchStreamPage = () => {
       {streamData && (
         <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
           <h3>Stream Data Result</h3>
-          <pre style={{ background: '#f8f8f8', padding: '10px', overflowX: 'auto' }}>
+          <p style={{ marginTop: '10px' }}><strong>Stream ID:</strong> {streamData.streamId}</p>
+          <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
+          <p><strong>Entity Company:</strong> {streamData.state.content.greenscoreDB?.entityCompany || 'N/A'}</p>
+          <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>
+          <pre style={{ background: '#f8f8f8', padding: '10px', marginTop: '15px', overflowX: 'auto' }}>
             {JSON.stringify(streamData.state, null, 2)}
           </pre>
         </div>

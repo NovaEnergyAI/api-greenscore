@@ -72,8 +72,6 @@ const AuthPrompt = () => {
             padding: '10px',
             background: isAuthenticated ? '#d3d3d3' : '#000', // Grayed out when disabled
             color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
             cursor: isAuthenticated ? 'not-allowed' : 'pointer',
             opacity: isAuthenticated ? 1 : 1,
             pointerEvents: isAuthenticated ? 'none' : 'auto',
@@ -90,8 +88,6 @@ const AuthPrompt = () => {
             padding: '10px',
             background: isAuthenticated ? '#f00' : '#d3d3d3', // Grayed out when disabled
             color: '#fff',
-            border: 'none',
-            borderRadius: '5px',
             cursor: isAuthenticated ? 'pointer' : 'not-allowed',
             opacity: isAuthenticated ? 1 : 1,
             pointerEvents: isAuthenticated ? 'auto' : 'none',

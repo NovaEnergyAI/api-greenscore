@@ -92,11 +92,11 @@ export default function CreateEVPStreamPage() {
   return (
     <div style={{ textAlign: 'left' }}>
       <ToastContainer />
-      <h2>Send Document to Ceramic</h2>
+      <h2>Create EVP Report Stream on Ceramic</h2>
       <p style={{ paddingTop: '10px', marginBottom: '10px' }}>
         {isAuthenticated
-          ? 'Enter the Document ID below and click "Submit Document to Ceramic" to send your data.'
-          : 'Please authenticate to proceed with adding assets. Click "Authenticate with Ethereum DID PKH" to continue.'}
+          ? 'Enter the Document ID below and click "Create on Ceramic" to send your data.'
+          : 'Please authenticate to proceed with creating streams. Click "Authenticate with Ethereum DID PKH" to continue.'}
       </p>
       {isAuthenticated ? (
         <>
@@ -110,7 +110,7 @@ export default function CreateEVPStreamPage() {
           <button 
             onClick={sendToCeramic} 
             style={{ padding: '8px 16px', marginLeft: '10px', background: '#000', color: '#fff'}}>
-            Submit Document to Ceramic
+            Create on Ceramic
           </button>
         </>
       ) : (
@@ -124,12 +124,11 @@ export default function CreateEVPStreamPage() {
       {streamData && (
         <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
           <h3>Stream Data Result</h3>
-          <p><strong>Stream ID:</strong> {streamData.streamId}</p>
+          <p style={{marginTop: '10px'}}><strong>Stream ID:</strong> {streamData.streamId}</p>
           <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
-          <p><strong>Entity Company:</strong> {streamData.state.content.evpReportDB?.entityCompany || 'N/A'}</p>
+          <p><strong>Entity Company:</strong> {streamData.state.content.greenscoreDB?.entityCompany || 'N/A'}</p>
           <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>
-          <p><strong>Provider City:</strong> {streamData.state.content.greenscoreDB?.providerCity || 'N/A'}</p>
-          <pre style={{ background: '#f8f8f8', padding: '10px' }}>
+          <pre style={{ background: '#f8f8f8', padding: '10px', marginTop: '15px' }}>
             {JSON.stringify(streamData.state, null, 2)}
           </pre>
         </div>
