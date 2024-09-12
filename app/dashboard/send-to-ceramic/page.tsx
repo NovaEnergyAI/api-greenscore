@@ -8,11 +8,11 @@ export default function Page() {
   const [documentId, setDocumentId] = useState('');
   const [session, setSession] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [streamData, setStreamData] = useState<any | null>(null);
   const clients = useCeramicContext();
   const { ceramic, composeClient } = clients;
 
   useEffect(() => {
-    // Load the session from localStorage
     const initializeSession = async () => {
       try {
         const storedSession = localStorage.getItem('ceramic:eth_did');
@@ -35,7 +35,7 @@ export default function Page() {
 
   const handleAuthenticate = async () => {
     try {
-      localStorage.setItem('ceramic:auth_type', 'eth'); 
+      localStorage.setItem('ceramic:auth_type', 'eth');
       await authenticateCeramic(ceramic, composeClient);
       const newSession = localStorage.getItem('ceramic:eth_did');
       if (newSession) {
@@ -71,6 +71,7 @@ export default function Page() {
       console.log('Response from API:', result);
 
       if (result.success) {
+        setStreamData(result.streamDataResult);
         alert('Data saved to Ceramic and Postgres successfully');
       } else {
         alert('Failed to save data:\nError - ' + result.message);
@@ -93,6 +94,20 @@ export default function Page() {
             placeholder="Enter Document ID"
           />
           <button onClick={sendToCeramic}>Submit Document to Ceramic</button>
+
+          {streamData && (
+            <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
+              <h2>Stream Data Result</h2>
+              <p><strong>Stream ID:</strong> <a href={`https://cerscan.com/testnet-clay/stream/${streamData.streamId}`} target="_blank" rel="noopener noreferrer">{streamData.streamId}</a></p>
+              <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
+              <p><strong>Entity Company:</strong> {streamData.state.content.evpReportDB?.entityCompany || 'N/A'}</p>
+              <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>
+              <p><strong>Provider City:</strong> {streamData.state.content.greenscoreDB?.providerCity || 'N/A'}</p>
+              <pre style={{ background: '#f8f8f8', padding: '10px' }}>
+                {JSON.stringify(streamData.state, null, 2)}
+              </pre>
+            </div>
+          )}
         </>
       ) : (
         <div>

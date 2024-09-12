@@ -36,7 +36,6 @@ async function runCreateComposite() {
       // An authenticated DID must be set on the Ceramic instance
       ceramic.did = did;  
 
-
       // Replace by the path to the source schema file
       const composite = await createComposite(ceramic, './composites/evp-template.graphql');
 
