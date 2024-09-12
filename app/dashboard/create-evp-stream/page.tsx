@@ -3,8 +3,10 @@
 import React, { useState, useEffect } from 'react';
 import { authenticateCeramic } from '@root/scripts/authenticate';
 import { useCeramicContext } from '@root/context/CeramicContext';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-export default function Page() {
+export default function CreateEVPStreamPage() {
   const [documentId, setDocumentId] = useState('');
   const [session, setSession] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -20,13 +22,16 @@ export default function Page() {
           setSession(storedSession);
           setIsAuthenticated(true);
           console.log('Session restored from localStorage:', storedSession);
+          toast.info('Session restored from localStorage.');
         } else {
           console.warn('No stored session found. Please authenticate.');
           setIsAuthenticated(false);
+          toast.warn('No stored session found. Please authenticate.');
         }
       } catch (error) {
         console.error('Failed to authenticate:', error);
         setIsAuthenticated(false);
+        toast.error('Failed to authenticate. Please try again.');
       }
     };
 
@@ -41,25 +46,27 @@ export default function Page() {
       if (newSession) {
         setSession(newSession);
         setIsAuthenticated(true);
+        toast.success('Successfully authenticated with Ceramic!');
       }
     } catch (error) {
       console.error('Authentication failed:', error);
+      toast.error('Authentication failed. Please try again.');
     }
   };
 
   const sendToCeramic = async () => {
     if (!session) {
-      alert('Session is not available. Please authenticate first.');
+      toast.error('Session is not available. Please authenticate first.');
       return;
     }
 
     if (!documentId) {
-      alert('Please enter a document ID.');
+      toast.error('Please enter a document ID.');
       return;
     }
 
     try {
-      const response = await fetch('http://localhost:10000/api/ceramic/send-to-ceramic', {
+      const response = await fetch('http://localhost:10000/api/ceramic/create-evp-stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -72,18 +79,19 @@ export default function Page() {
 
       if (result.success) {
         setStreamData(result.streamDataResult);
-        alert('Data saved to Ceramic and Postgres successfully');
+        toast.success('Data saved to Ceramic and Postgres successfully!');
       } else {
-        alert('Failed to save data:\nError - ' + result.message);
+        toast.error(`Failed to save data: ${result.message}`);
       }
     } catch (error) {
       console.error('Error sending data to Ceramic:', error);
-      alert('An error occurred while sending data to Ceramic.');
+      toast.error('An error occurred while sending data to Ceramic.');
     }
   };
 
   return (
     <div>
+      <ToastContainer />
       <h1>Send Document to Ceramic</h1>
       {isAuthenticated ? (
         <>
@@ -92,13 +100,16 @@ export default function Page() {
             value={documentId}
             onChange={(e) => setDocumentId(e.target.value)}
             placeholder="Enter Document ID"
+            style={{ padding: '8px', marginBottom: '10px', width: '300px' }}
           />
-          <button onClick={sendToCeramic}>Submit Document to Ceramic</button>
+          <button onClick={sendToCeramic} style={{ padding: '8px 16px', marginLeft: '10px' }}>
+            Submit Document to Ceramic
+          </button>
 
           {streamData && (
             <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
               <h2>Stream Data Result</h2>
-              <p><strong>Stream ID:</strong> <a href={`https://cerscan.com/testnet-clay/stream/${streamData.streamId}`} target="_blank" rel="noopener noreferrer">{streamData.streamId}</a></p>
+              <p><strong>Stream ID:</strong> {streamData.streamId}</p>
               <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
               <p><strong>Entity Company:</strong> {streamData.state.content.evpReportDB?.entityCompany || 'N/A'}</p>
               <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>

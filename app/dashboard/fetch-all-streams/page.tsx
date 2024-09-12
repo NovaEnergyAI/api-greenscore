@@ -15,17 +15,20 @@ interface EVPNode {
   };
 }
 
-const FetchAssetsPage = () => {
+const FetchAllStreamsPage = () => {
   const [evpOutputs, setEVPOutputs] = useState<EVPNode[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
     try {
-      const response = await fetch('http://localhost:10000/api/ceramic/fetch-from-ceramic');
+      const response = await fetch('http://localhost:10000/api/ceramic/fetch-all-streams');
+     
       if (response.ok) {
         const result = await response.json();
+        console.log('Response from API - (fetch-all-streams.ts):', result);
+
         if (result.success && result.data) {
-          // Extracting only the relevant fields
+          // Extracting only a few fields not all:
           const formattedData = result.data.map((node: any) => ({
             streamId: node.streamId,
             evpId: node.state.content.evpId,
@@ -37,7 +40,11 @@ const FetchAssetsPage = () => {
             },
           }));
           setEVPOutputs(formattedData);
-          toast.success('Data fetched successfully!');
+          
+          // Checks if the success toast is already active before showing it
+          if (!toast.isActive('fetch-success')) {
+            toast.success('Data fetched successfully!', { toastId: 'fetch-success' });
+          }
         } else {
           setError('No data returned');
           toast.error('No data returned');
@@ -59,12 +66,12 @@ const FetchAssetsPage = () => {
   return (
     <div>
       <ToastContainer />
-      <h1>EVP Report Outputs</h1>
+      <h1>Fetches All EVPs from Ceramic</h1>
       {error && <p>{error}</p>}
       <ul>
         {evpOutputs.map((node, index) => (
           <li key={index} style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
-            <p><strong>Stream ID:</strong> <a href={`https://cerscan.com/testnet-clay/stream/${node.streamId}`} target="_blank" rel="noopener noreferrer">{node.streamId}</a></p>
+            <p><strong>Stream ID:</strong> {node.streamId}</p>
             <p><strong>EVP ID:</strong> {node.evpId}</p>
             <p><strong>Entity Company:</strong> {node.evpReportDB?.entityCompany || 'N/A'}</p>
             <p><strong>Green Score:</strong> {node.greenscoreDB?.greenScore !== undefined ? node.greenscoreDB.greenScore : 'N/A'}</p>
@@ -75,4 +82,4 @@ const FetchAssetsPage = () => {
   );
 };
 
-export default FetchAssetsPage;
+export default FetchAllStreamsPage;

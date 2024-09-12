@@ -13,10 +13,10 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 const links = [
   { name: 'Authenticate', href: '/dashboard/authenticate', icon: KeyIcon },
-  { name: 'Send to Ceramic', href: '/dashboard/send-to-ceramic', icon: PlusIcon },
-  { name: 'Fetch from Ceramic', href: '/dashboard/fetch-from-ceramic', icon: ClipboardDocumentCheckIcon },
+  { name: 'Create EVP Stream', href: '/dashboard/create-evp-stream', icon: PlusIcon },
+  { name: 'Fetch A Stream', href: '/dashboard/fetch-stream', icon: ClipboardDocumentCheckIcon },
+  { name: 'Fetch All Streams', href: '/dashboard/fetch-all-streams', icon: ClipboardDocumentCheckIcon },
   { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
-  // { name: 'Get Templates', href: '/dashboard/get-templates', icon: Squares2X2Icon },
 ];
 
 export default function NavLinks() {
