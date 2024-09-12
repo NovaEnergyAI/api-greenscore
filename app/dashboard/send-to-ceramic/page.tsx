@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { authenticateCeramic } from '@root/scripts/authenticate';
 import { useCeramicContext } from '@root/context/CeramicContext';
 
-export default function AddAssetPage() {
+export default function Page() {
   const [documentId, setDocumentId] = useState('');
   const [session, setSession] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -35,7 +35,7 @@ export default function AddAssetPage() {
 
   const handleAuthenticate = async () => {
     try {
-      localStorage.setItem('ceramic:auth_type', 'eth'); // Set the correct auth type
+      localStorage.setItem('ceramic:auth_type', 'eth'); 
       await authenticateCeramic(ceramic, composeClient);
       const newSession = localStorage.getItem('ceramic:eth_did');
       if (newSession) {
@@ -59,8 +59,7 @@ export default function AddAssetPage() {
     }
 
     try {
-      // Send the document ID and session to the backend server
-      const response = await fetch('http://localhost:10000/api/ceramic/add-asset', {
+      const response = await fetch('http://localhost:10000/api/ceramic/send-to-ceramic', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

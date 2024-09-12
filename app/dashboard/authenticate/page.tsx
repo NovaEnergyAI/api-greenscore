@@ -26,7 +26,6 @@ const AuthPrompt = () => {
     }
   };
 
-  // Function to clear local storage
   const clearLocalStorage = () => {
     localStorage.removeItem('ceramic:eth_did');
     localStorage.removeItem('ceramic:auth_type');

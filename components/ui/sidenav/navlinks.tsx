@@ -13,8 +13,8 @@ import clsx from 'clsx';
 // Map of links to display in the side navigation.
 const links = [
   { name: 'Authenticate', href: '/dashboard/authenticate', icon: KeyIcon },
-  { name: 'Add Asset', href: '/dashboard/add-asset', icon: PlusIcon },
-  { name: 'Fetch Assets', href: '/dashboard/fetch-assets', icon: ClipboardDocumentCheckIcon },
+  { name: 'Send to Ceramic', href: '/dashboard/send-to-ceramic', icon: PlusIcon },
+  { name: 'Fetch from Ceramic', href: '/dashboard/fetch-from-ceramic', icon: ClipboardDocumentCheckIcon },
   { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
   // { name: 'Get Templates', href: '/dashboard/get-templates', icon: Squares2X2Icon },
 ];
