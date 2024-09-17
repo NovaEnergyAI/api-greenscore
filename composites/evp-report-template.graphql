@@ -1,5 +1,5 @@
-# Nova Energy Validation Process (EVP) Attestations DB
-type NovaEVPAttestationsDB @createModel(
+# Nova Energy Validation Process (EVP) DB
+type NovaEVPDB @createModel(
   accountRelation: LIST
   description: "A comprehensive EVP Report Database Template for capturing environmental and sustainability data."
 ) @createIndex(fields: [{ path: ["type"] }]) {
