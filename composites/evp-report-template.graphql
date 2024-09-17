@@ -1,7 +1,7 @@
 # Nova Energy Validation Process (EVP) DB
 type NovaEVPAttestationsDB @createModel(
   accountRelation: LIST
-  description: "A comprehensive EVP Report Database Template for capturing environmental and sustainability data."
+  description: "A comprehensive Nova EVP Attestations Database Template for capturing environmental and sustainability data."
 ) @createIndex(fields: [{ path: ["type"] }]) {
   evpId: String @string(maxLength: 100)                                  # Unique identifier for the attestation
   organizationId: String @string(maxLength: 100)                         # Organization associated with the attestation
