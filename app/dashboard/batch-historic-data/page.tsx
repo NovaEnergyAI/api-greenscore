@@ -68,6 +68,7 @@ export default function BatchProcessPage() {
       });
 
       const result = await response.json();
+
       console.log('Response from API:', result);
 
       if (result.success) {
