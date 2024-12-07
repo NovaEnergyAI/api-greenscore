@@ -30,7 +30,6 @@ const FetchAllStreamsPage = () => {
         if (result.success && result.data) {
           const formattedData = result.data.map((node: any) => ({
             streamId: node.streamId,
-            evpId: node.state.content.evpId,
             evpReportDB: {
               entityCompany: node.state.content.evpReportDB?.entityCompany,
             },
@@ -84,7 +83,7 @@ const FetchAllStreamsPage = () => {
           <li key={index} style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', position: 'relative' }}>
             <div>
               <p><strong>Stream ID:</strong> {node.streamId}</p>
-              <p><strong>EVP ID:</strong> {node.evpId}</p>
+              {/* <p><strong>EVP ID:</strong> {node.evpId}</p> */}
               <p><strong>Entity Company:</strong> {node.evpReportDB?.entityCompany || 'N/A'}</p>
               <p><strong>Green Score:</strong> {node.greenscoreDB?.greenScore !== undefined ? node.greenscoreDB.greenScore : 'N/A'}</p>
             </div>

@@ -70,7 +70,7 @@ const FetchStreamPage = () => {
         <div style={{ border: '1px solid #ddd', padding: '10px', margin: '10px 0' }}>
           <h3>Stream Data Result</h3>
           <p style={{ marginTop: '10px' }}><strong>Stream ID:</strong> {streamData.streamId}</p>
-          <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p>
+          {/* <p><strong>EVP ID:</strong> {streamData.state.content.evpId}</p> */}
           <p><strong>Entity Company:</strong> {streamData.state.content.greenscoreDB?.entityCompany || 'N/A'}</p>
           <p><strong>Green Score:</strong> {streamData.state.content.greenscoreDB?.greenScore !== undefined ? streamData.state.content.greenscoreDB.greenScore : 'N/A'}</p>
           <pre style={{ background: '#f8f8f8', padding: '10px', marginTop: '15px', overflowX: 'auto' }}>

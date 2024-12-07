@@ -69,8 +69,6 @@ export default function BatchProcessPage() {
 
       const result = await response.json();
 
-      console.log('Response from API:', result);
-
       if (result.success) {
         toast.success('Batch processing completed successfully!');
       } else {
@@ -94,7 +92,7 @@ export default function BatchProcessPage() {
       {isAuthenticated ? (
         <button
           onClick={handleBatchProcess}
-          style={{ padding: '8px 16px', background: '#000', color: '#fff' }}
+          style={{ padding: '8px 16px', marginLeft: '10px', background: '#000', color: '#fff' }}
         >
           Start Batch Process
         </button>
