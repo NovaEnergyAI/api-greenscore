@@ -4,12 +4,14 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { EAS, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { toast, ToastContainer } from 'react-toastify';
+import { getEnvVariable } from '@root/common/utilities';
 import 'react-toastify/dist/ReactToastify.css';
+import 'dotenv';
 
 const EAS_CONTRACT_ADDRESS = '0x4200000000000000000000000000000000000021'; // Base Sepolia EAS contract address
 const SCHEMA_UID = '0x7345713374a82b7b2281d6f8bc43e044b41f633e336e32280e54501f7edeedf9'; // Your schema UID
-const BASE_SEPOLIA_CHAIN_ID = 84532; // Base Sepolia Chain ID (Decimal)
-const BASE_SEPOLIA_EAS_SCAN_URL = 'https://base-sepolia.easscan.org/attestation/view/';
+const BASE_SEPOLIA_CHAIN_ID = '84532'; // Base Sepolia Chain ID (Decimal)
+const BASE_SEPOLIA_EAS_SCAN_URL = "https://base-sepolia.easscan.org/attestation/view/";
 
 const AttestationPage = () => {
   const [ceramic_id, setCeramicId] = useState('');
@@ -23,7 +25,7 @@ const AttestationPage = () => {
 
   useEffect(() => {
     const initializeSession = async () => {
-      if (localStorage.getItem('wallet_connected') === 'true') {
+      if (localStorage.getItem('wallet_connected') !== 'true') {
         await connectWallet();
       }
     };
