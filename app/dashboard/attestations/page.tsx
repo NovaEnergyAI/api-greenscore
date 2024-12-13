@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'dotenv';
 
 const EAS_CONTRACT_ADDRESS = '0x4200000000000000000000000000000000000021';                  // Base Sepolia EAS contract address
-const SCHEMA_UID = '0x7345713374a82b7b2281d6f8bc43e044b41f633e336e32280e54501f7edeedf9';    // Our schema UID
+const SCHEMA_UID = '0x3993cd39c764d865099102d18984a5df65e8739adc5b17fbf2aad96e1d8a1a7b';    // Our schema UID
 const BASE_SEPOLIA_CHAIN_ID = BigInt(84532);                                                // Base Sepolia Chain ID (Decimal)
 const BASE_SEPOLIA_EAS_SCAN_URL = "https://base-sepolia.easscan.org/attestation/view/";     // Base EAS Scan URL
 
@@ -87,7 +87,7 @@ const AttestationPage = () => {
       eas.connect(signer!);
 
       const schemaEncoder = new SchemaEncoder(
-        'string ceramicStreamId,string modelCID,string rootCID,string confidenceScore,string emissionsScore,string greenScore,string locationScore,string providerNetwork,string providerCountry,string entityCompany,string reportStartDate,string reportEndDate'
+        'string ceramicStreamId,string modelCID,string rootCID,string confidenceScore,string emissionsScore,string greenScore,string locationScore,string providerNetwork,string providerCountry,string entityCompany,string reportStartDate,string reportEndDate, string templateVersion'
       );
 
       const encodedData = schemaEncoder.encodeData([
@@ -103,6 +103,7 @@ const AttestationPage = () => {
         { name: 'entityCompany', value: evpData.entityCompany, type: 'string' },
         { name: 'reportStartDate', value: evpData.reportStartDate, type: 'string' },
         { name: 'reportEndDate', value: evpData.reportEndDate, type: 'string' },
+        { name: 'templateVersion', value: "1.0.0", type: 'string' },
       ]);
 
       const tx = await eas.attest({
