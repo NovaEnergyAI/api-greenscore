@@ -1,7 +1,6 @@
 'use client';
 
 import {
-  KeyIcon,
   PlusIcon,
   ClipboardDocumentCheckIcon,
   Squares2X2Icon,
@@ -12,12 +11,11 @@ import clsx from 'clsx';
 
 // Map of links to display in the side navigation.
 const links = [
-  { name: 'Authenticate', href: '/dashboard/authenticate', icon: KeyIcon },
   { name: 'Create EVP Stream', href: '/dashboard/create-evp-stream', icon: PlusIcon },
+  { name: 'Create Attestation', href: '/dashboard/attestations', icon: PlusIcon },
   { name: 'Fetch A Stream', href: '/dashboard/fetch-stream', icon: ClipboardDocumentCheckIcon },
   { name: 'Fetch All Streams', href: '/dashboard/fetch-all-streams', icon: ClipboardDocumentCheckIcon },
   { name: 'Batch Historic Data', href: '/dashboard/batch-historic-data', icon: ClipboardDocumentCheckIcon },
-  { name: 'Attestations', href: '/dashboard/attestations', icon: ClipboardDocumentCheckIcon },
 ];
 
 export default function NavLinks() {

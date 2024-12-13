@@ -4,17 +4,16 @@ import React, { useState, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { EAS, SchemaEncoder } from '@ethereum-attestation-service/eas-sdk';
 import { toast, ToastContainer } from 'react-toastify';
-import { getEnvVariable } from '@root/common/utilities';
 import 'react-toastify/dist/ReactToastify.css';
 import 'dotenv';
 
-const EAS_CONTRACT_ADDRESS = '0x4200000000000000000000000000000000000021'; // Base Sepolia EAS contract address
-const SCHEMA_UID = '0x7345713374a82b7b2281d6f8bc43e044b41f633e336e32280e54501f7edeedf9'; // Your schema UID
-const BASE_SEPOLIA_CHAIN_ID = '84532'; // Base Sepolia Chain ID (Decimal)
-const BASE_SEPOLIA_EAS_SCAN_URL = "https://base-sepolia.easscan.org/attestation/view/";
+const EAS_CONTRACT_ADDRESS = '0x4200000000000000000000000000000000000021';                  // Base Sepolia EAS contract address
+const SCHEMA_UID = '0x7345713374a82b7b2281d6f8bc43e044b41f633e336e32280e54501f7edeedf9';    // Our schema UID
+const BASE_SEPOLIA_CHAIN_ID = BigInt(84532);                                                // Base Sepolia Chain ID (Decimal)
+const BASE_SEPOLIA_EAS_SCAN_URL = "https://base-sepolia.easscan.org/attestation/view/";     // Base EAS Scan URL
 
 const AttestationPage = () => {
-  const [ceramic_id, setCeramicId] = useState('');
+  const [ceramicId, setCeramicId] = useState('');
   const [evpData, setEvpData] = useState<any>(null);
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
   const [attestationDetails, setAttestationDetails] = useState<any>(null);
@@ -33,38 +32,32 @@ const AttestationPage = () => {
   }, []);
 
   const connectWallet = async () => {
-    console.log('Attempting to connect wallet...');
-    if (window.ethereum) {
-      try {
-        const newProvider = new ethers.BrowserProvider(window.ethereum);
-        await newProvider.send('eth_requestAccounts', []);
-        const newSigner = await newProvider.getSigner();
-        const signerAddress = await newSigner.getAddress();
+    try {
+      if (!window.ethereum) throw new Error('MetaMask is not installed.');
 
-        const network = await newProvider.getNetwork();
-        if (network.chainId !== BigInt(BASE_SEPOLIA_CHAIN_ID)) {
-          throw new Error(`Please ensure your wallet is connected to the Base Sepolia network (chainId: ${BASE_SEPOLIA_CHAIN_ID}).`);
-        }
+      const browserProvider = new ethers.BrowserProvider(window.ethereum);
+      const accounts = await browserProvider.send('eth_requestAccounts', []);
+      const signerInstance = await browserProvider.getSigner();
+      const network = await browserProvider.getNetwork();
 
-        setProvider(newProvider);
-        setSigner(newSigner);
-        setUserAddress(signerAddress);
-
-        setIsAuthenticated(true);
-        localStorage.setItem('wallet_connected', 'true');
-        toast.success('Wallet connected successfully!');
-        console.log('Wallet connected:', signerAddress);
-      } catch (err) {
-        console.error('Error connecting wallet:', err);
-        toast.error('Error connecting wallet. Please ensure you are on Base Sepolia.');
+      if (network.chainId !== BASE_SEPOLIA_CHAIN_ID) {
+        throw new Error(`Please connect to the Base Sepolia network (chainId: ${BASE_SEPOLIA_CHAIN_ID}).`);
       }
-    } else {
-      toast.error('Please install MetaMask');
+
+      setProvider(browserProvider);
+      setSigner(signerInstance);
+      setUserAddress(accounts[0]);
+      setIsAuthenticated(true);
+      localStorage.setItem('wallet_connected', 'true');
+      toast.success('Wallet connected successfully!');
+    } catch (error) {
+      console.error('Error connecting wallet:', error);
+      toast.error(error.message || 'Failed to connect wallet.');
     }
   };
 
   const createOnchainAttestation = async () => {
-    if (!ceramic_id) {
+    if (!ceramicId) {
       toast.error('Please enter a Ceramic ID.');
       return;
     }
@@ -74,7 +67,7 @@ const AttestationPage = () => {
       const response = await fetch('http://localhost:10000/api/ethereum-attestations/prepare-attestation', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ceramic_id }),
+        body: JSON.stringify({ ceramic_id: ceramicId }),
       });
 
       const result = await response.json();
@@ -86,6 +79,7 @@ const AttestationPage = () => {
 
       const evpData = result.attestationPackage;
       setEvpData(evpData);
+      console.log("evpData:", result);
 
       // Create on-chain attestation
       toast.info('Creating on-chain attestation...');
@@ -129,7 +123,7 @@ const AttestationPage = () => {
       const updateResponse = await fetch('http://localhost:10000/api/ethereum-attestations/update-database', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ceramic_id, ethereum_attestation_uid: newAttestationUID }),
+        body: JSON.stringify({ ceramic_id: ceramicId, ethereum_attestation_uid: newAttestationUID }),
       });
 
       const updateResult = await updateResponse.json();
@@ -182,93 +176,80 @@ const AttestationPage = () => {
     }
   };
 
+   const serializeBigInt = (key: string, value: any) =>
+    typeof value === 'bigint' ? value.toString() : value;
+
   return (
-    <div style={{ textAlign: 'left', padding: '20px', maxWidth: '600px', margin: '0 auto' }}>
+    <div style={{ maxWidth: '600px', margin: 'auto', padding: '20px' }}>
       <ToastContainer />
-      <h2 style={{ textAlign: 'center', fontWeight: 'bold' }}>Attestation Management</h2>
+      <h2 style={{ textAlign: 'center', fontWeight: 'bold' }}>On-chain Attestation</h2>
 
       <div style={{ marginBottom: '20px' }}>
-        <h3>Connect Wallet</h3>
         <button
           onClick={connectWallet}
           style={{
             padding: '10px 20px',
-            backgroundColor: '#007BFF',
+            backgroundColor: isAuthenticated ? '#555' : '#000',
             color: '#fff',
-            border: 'none',
             borderRadius: '5px',
-            cursor: 'pointer',
+            cursor: isAuthenticated ? 'not-allowed' : 'pointer',
+            width: '100%',
           }}
+          disabled={isAuthenticated}
         >
           {isAuthenticated ? 'Wallet Connected' : 'Connect Wallet'}
         </button>
       </div>
 
       <div style={{ marginBottom: '20px' }}>
-        <h3>Enter Ceramic ID</h3>
         <input
           type="text"
-          value={ceramic_id}
+          value={ceramicId}
           onChange={(e) => setCeramicId(e.target.value)}
           placeholder="Enter Ceramic ID"
           style={{
             padding: '10px',
             width: '100%',
-            boxSizing: 'border-box',
             borderRadius: '5px',
             border: '1px solid #ccc',
+            marginBottom: '10px',
           }}
         />
+        <button
+          onClick={createOnchainAttestation}
+          style={{
+            padding: '10px 20px',
+            backgroundColor: '#000',
+            color: '#fff',
+            borderRadius: '5px',
+            cursor: 'pointer',
+            width: '100%',
+          }}
+        >
+          Create Attestation
+        </button>
       </div>
 
-      <button
-        onClick={createOnchainAttestation}
-        style={{
-          padding: '10px 20px',
-          backgroundColor: '#28a745',
-          color: '#fff',
-          border: 'none',
-          borderRadius: '5px',
-          cursor: 'pointer',
-          width: '100%',
-        }}
-      >
-        Create On-chain Attestation
-      </button>
-
       {attestationUID && (
-        <div style={{ marginTop: '20px', padding: '10px', backgroundColor: '#f8f9fa', borderRadius: '5px' }}>
-          <h4>New Attestation UID:</h4>
+        <div style={{ marginTop: '20px', backgroundColor: '#effaf1', color: '#000000', padding: '15px', borderRadius: '5px',  wordWrap: 'break-word'}}>
+          <h4>Attestation UID:</h4>
           <p>{attestationUID}</p>
           <a
             href={`${BASE_SEPOLIA_EAS_SCAN_URL}${attestationUID}`}
             target="_blank"
             rel="noopener noreferrer"
-            style={{ color: '#007BFF', textDecoration: 'underline' }}
+            style={{ color: '#0fbb02', textDecoration: 'underline'}}
           >
-            View Attestation on EAS Scan
+            View on EAS Scan
           </a>
         </div>
       )}
 
       {attestationDetails && (
-        <div
-          style={{
-            marginTop: '20px',
-            padding: '10px',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '5px',
-            overflow: 'auto', // Makes the content scrollable if it overflows
-            maxHeight: '300px', // Limits the height of the box
-            wordWrap: 'break-word', // Ensures text wraps within the box
-            whiteSpace: 'pre-wrap', // Preserves whitespace and line breaks
-          }}
-        >
+        <div style={{ marginTop: '20px', backgroundColor: '#effaf1', color: '#000000', padding: '15px', borderRadius: '5px' }}>
           <h4>Attestation Details:</h4>
-          <pre>
-            {JSON.stringify(attestationDetails, (key, value) =>
-              typeof value === 'bigint' ? value.toString() : value
-            , 2)}
+          <pre style={{ whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+          {JSON.stringify(attestationDetails, serializeBigInt, 2)}
           </pre>
         </div>
       )}
