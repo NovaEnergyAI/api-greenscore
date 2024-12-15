@@ -1,7 +1,7 @@
 # Nova Energy Validation Process (EVP) DB
 type NovaEVPAttestationsDB @createModel(
   accountRelation: LIST
-  description: "A comprehensive Nova EVP Database Template for capturing environmental and sustainability data."
+  description: "Test EVP Template: #1"
 ) @createIndex(fields: [{ path: ["type"] }]) {
   createdAt: String @string(maxLength: 256)                               # Timestamp when the audit document was created
   type: String @string(maxLength: 256)                                    # Type of the document (e.g., evp-document)
