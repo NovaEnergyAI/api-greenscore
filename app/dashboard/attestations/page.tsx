@@ -9,7 +9,7 @@ import 'dotenv';
 
 const EAS_CONTRACT_ADDRESS = '0x4200000000000000000000000000000000000021';                  // Base Sepolia EAS contract address
 const SCHEMA_UID = '0x3993cd39c764d865099102d18984a5df65e8739adc5b17fbf2aad96e1d8a1a7b';    // Our schema UID
-const BASE_SEPOLIA_CHAIN_ID = BigInt(84532);                                                // Base Sepolia Chain ID (Decimal)
+const BASE_SEPOLIA_CHAIN_ID = 84532;                                                // Base Sepolia Chain ID (Decimal)
 const BASE_SEPOLIA_EAS_SCAN_URL = "https://base-sepolia.easscan.org/attestation/view/";     // Base EAS Scan URL
 
 const AttestationPage = () => {
@@ -18,7 +18,7 @@ const AttestationPage = () => {
   const [attestationUID, setAttestationUID] = useState<string | null>(null);
   const [attestationDetails, setAttestationDetails] = useState<any>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [provider, setProvider] = useState<ethers.BrowserProvider | undefined>(undefined);
+  const [provider, setProvider] = useState<ethers.providers.Web3Provider | undefined>(undefined);
   const [signer, setSigner] = useState<ethers.Signer | undefined>(undefined);
   const [userAddress, setUserAddress] = useState<string>('');
 
@@ -35,7 +35,7 @@ const AttestationPage = () => {
     try {
       if (!window.ethereum) throw new Error('MetaMask is not installed.');
 
-      const browserProvider = new ethers.BrowserProvider(window.ethereum);
+      const browserProvider = new ethers.providers.Web3Provider(window.ethereum);
       const accounts = await browserProvider.send('eth_requestAccounts', []);
       const signerInstance = await browserProvider.getSigner();
       const network = await browserProvider.getNetwork();
