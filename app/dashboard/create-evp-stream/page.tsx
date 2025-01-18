@@ -54,7 +54,7 @@ export default function CreateEVPStreamPage() {
       />
       <button 
         onClick={sendToCeramic} 
-        style={{ padding: '8px 16px', background: '#000', color: '#fff' }}>
+        style={{ padding: '8px 16px', background: '#000', color: '#fff', marginLeft: '10px' }}>
         Create on Ceramic
       </button>
 
